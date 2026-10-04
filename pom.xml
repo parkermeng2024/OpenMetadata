@@ -258,6 +258,23 @@
         <artifactId>logging-interceptor</artifactId>
         <version>5.5.0</version>
       </dependency>
+      <!-- okhttp-jvm 5.5.0 (the artifact that logging-interceptor above drags in) calls
+           Okio.socket(Socket), which only exists from okio 3.18 on. Plain okhttp 4.12.0 brings
+           okio 3.6.0 and wins dependency resolution, so whichever okhttp3.* classes the class
+           loader happens to take from okhttp-jvm died with
+           NoSuchMethodError: 'okio.Socket okio.Okio.socket(java.net.Socket)' on every real
+           connection attempt (surfaced by K8sPipelineClientBotTokenBugTest). okio keeps binary
+           compatibility across the 3.x line, so raising the floor satisfies okhttp 4.12.0 too. -->
+      <dependency>
+        <groupId>com.squareup.okio</groupId>
+        <artifactId>okio</artifactId>
+        <version>3.18.2</version>
+      </dependency>
+      <dependency>
+        <groupId>com.squareup.okio</groupId>
+        <artifactId>okio-jvm</artifactId>
+        <version>3.18.2</version>
+      </dependency>
       <!-- CVE-2026-47857: reactor-core < 3.8.7 (reached transitively via reactor-netty and the
            azure/spring stacks). Pin the whole Reactor 2026.0 train together: reactor-core 3.8.7
            and reactor-netty 1.3.7 are the aligned release, so mixing lines is avoided. -->
