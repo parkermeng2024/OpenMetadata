@@ -27,17 +27,18 @@ RUN mkdir -p /opt/openmetadata && \
     printf '#!/busybox/sh\nexec /busybox/sh "$@"\n' > /shim/bin/bash && \
     chmod 755 /shim/bin/bash
 
+# JDK 25 no longer ships jmods (Temurin builds its images with jlink upstream),
+# so `jlink --add-modules ALL-MODULE-PATH` cannot run here — and since JDK 24 it
+# would also need an explicit --module-path. The JDK runtime carries the same
+# module set the old jlink step linked, so use it directly and keep the binary
+# pruning that dropped the dev tools.
 FROM eclipse-temurin:25-jdk AS jre-builder
 
-RUN jlink \
-      --add-modules ALL-MODULE-PATH \
-      --strip-debug \
-      --no-man-pages \
-      --no-header-files \
-      --compress=zip-6 \
-      --output /javaruntime
+# jlink's --no-man-pages / --no-header-files have no runtime value, so drop the
+# same directories by hand.
+RUN rm -rf ${JAVA_HOME}/man ${JAVA_HOME}/include ${JAVA_HOME}/lib/src.zip
 
-RUN find /javaruntime/bin -type f \
+RUN find ${JAVA_HOME}/bin -type f \
       ! -name java ! -name jcmd ! -name jstack ! -name jmap \
       ! -name jinfo ! -name jps ! -name jstat ! -name jfr ! -name keytool \
       -delete
@@ -47,7 +48,7 @@ FROM gcr.io/distroless/cc-debian13:debug-nonroot
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-COPY --from=jre-builder /javaruntime ${JAVA_HOME}
+COPY --from=jre-builder /opt/java/openjdk ${JAVA_HOME}
 COPY --from=dist /shim/bin /bin
 COPY --from=dist /opt/openmetadata /opt/openmetadata
 COPY --chmod=755 docker/openmetadata-start.sh /
