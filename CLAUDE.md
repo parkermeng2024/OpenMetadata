@@ -16,7 +16,7 @@ and Docker infrastructure.
 
 ## Stack at a glance
 
-- **Backend**: Java 21 + Dropwizard, multi-module Maven.
+- **Backend**: Java 25 + Dropwizard, multi-module Maven.
 - **Frontend**: React + TypeScript, built with **Vite** (dev server on :3000); component library
   `openmetadata-ui-core-components` — the **UntitledUI + Tailwind v4** (`tw:` prefix, react-aria-components)
   go-forward design system; legacy stack is Ant Design + Less (deprecated). Machine-readable design-system
@@ -50,7 +50,7 @@ and Docker infrastructure.
   The last line installs the `pre-commit` hooks (`.pre-commit-config.yaml`): on `git commit` they run
   Java format (spotless), Python format (ruff), UI format (prettier), design-token, and Apache-2.0
   license checks on your changed files, matching CI. Do not skip them with `--no-verify`.
-- **Java**: Java 21; use `mvn`. **Frontend**: use `yarn` (never `npm`); frontend root is
+- **Java**: Java 25; use `mvn`. **Frontend**: use `yarn` (never `npm`); frontend root is
   `openmetadata-ui/src/main/resources/ui/`.
 - **Docker dev services**: `docker compose -f docker/development/docker-compose.yml up -d`.
 

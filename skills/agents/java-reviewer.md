@@ -86,10 +86,10 @@ public void processEntity(Entity entity) {
 
   // GOOD: defensive copy or unmodifiable view
   public List<String> getTags() { return Collections.unmodifiableList(tags); }
-  // or with Java 21: return List.copyOf(tags);
+  // or with Java 25: return List.copyOf(tags);
   ```
 - **Utility classes must be `final` with a private constructor** — they should never be instantiated or subclassed.
-- **Prefer records for data carriers** (Java 21 supports them) when a class is purely data with no behavior beyond accessors.
+- **Prefer records for data carriers** (Java 25 supports them) when a class is purely data with no behavior beyond accessors.
 
 ### 4. Error Handling
 
@@ -151,7 +151,7 @@ if (taskStatus == TaskStatus.OPEN) { ... }
 
 **Rule: More than 3 `else if` branches means the structure is wrong. Refactor.**
 
-#### Pattern A: `else if` on `instanceof` → Switch with Pattern Matching (Java 21)
+#### Pattern A: `else if` on `instanceof` → Switch with Pattern Matching (Java 25)
 
 ```java
 // BAD: 9-branch instanceof chain

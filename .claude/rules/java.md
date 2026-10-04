@@ -113,7 +113,7 @@ repository) and `common/src/main/java/org/openmetadata/common/utils/CommonUtil.j
 ## No convoluted if/else chains
 
 - More than 3 `else if` means the structure is wrong: `instanceof` → `switch` pattern matching (Java
-  21); enum → `switch` expression; `.equals("string")` → `Map` dispatch or enum lookup;
+  25); enum → `switch` expression; `.equals("string")` → `Map` dispatch or enum lookup;
   `.contains("string")` → `Map`/predicate list. Extract repeated compound conditions into a named
   method or `Set.contains()`.
 
@@ -128,7 +128,7 @@ repository) and `common/src/main/java/org/openmetadata/common/utils/CommonUtil.j
   fields into a focused class. Resource classes are thin orchestrators; repositories do data access,
   not business logic.
 
-## Modern Java (21)
+## Modern Java (25)
 
 - try-with-resources for `AutoCloseable`; diamond `<>`; pattern matching (`if (obj instanceof String s)`);
   `switch` expressions over enum/type `if/else` chains; `List.of()`/`Map.of()`/`Set.of()`; `Optional`

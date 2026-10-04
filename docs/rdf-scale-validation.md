@@ -145,13 +145,13 @@ Playwright workflow. Migration corrections remain in the unreleased **2.0.2** mi
 
 ## Reproduce
 
-Run from a configured Java 21 development checkout with Docker available:
+Run from a configured Java 25 development checkout with Docker available:
 
 ```bash
 scripts/rdf-catalog-scale.sh
 ```
 
-Set `JAVA_HOME` to a Java 21 runtime matching the host architecture. Both Maven and the launcher
+Set `JAVA_HOME` to a Java 25 runtime matching the host architecture. Both Maven and the launcher
 use it; `JAVA_BIN` overrides the launch executable when needed.
 
 The script builds the Maven dependencies and Fuseki image, starts isolated containers, and writes
