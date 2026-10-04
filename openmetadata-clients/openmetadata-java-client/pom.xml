@@ -12,7 +12,7 @@
     <artifactId>openmetadata-java-client</artifactId>
     <name>OpenMetadata Java Client</name>
     <properties>
-        <java.version>21</java.version>
+        <java.version>25</java.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <springfox-version>2.7.0</springfox-version>

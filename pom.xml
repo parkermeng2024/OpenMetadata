@@ -86,7 +86,7 @@
     <javax.ws.rs-api.version>2.1.1</javax.ws.rs-api.version>
     <!-- update from here -->
     <jakarta.servlet-api.version>6.0.0</jakarta.servlet-api.version>
-    <maven-dependency-plugin.version>3.6.0</maven-dependency-plugin.version>
+    <maven-dependency-plugin.version>3.10.0</maven-dependency-plugin.version>
     <maven-jar-plugin.version>3.3.0</maven-jar-plugin.version>
     <!-- Surefire must be >= 3.6.0: openmetadata-sdk runs junit-jupiter 6.x, whose JUnit Platform 6
          launcher is unusable with the launcher bundled by earlier Surefire (NoSuchMethodError on
@@ -1207,8 +1207,8 @@
           <artifactId>maven-compiler-plugin</artifactId>
           <version>3.14.1</version>
           <configuration>
-            <source>21</source>
-            <target>21</target>
+            <source>25</source>
+            <target>25</target>
             <annotationProcessorPaths>
               <path>
                 <groupId>org.projectlombok</groupId>
