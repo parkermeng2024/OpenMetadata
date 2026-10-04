@@ -134,10 +134,10 @@ else
 fi
 
 version="$(docker run --rm --entrypoint java "$IMAGE" -version 2>&1 || true)"
-if echo "$version" | grep -q 'version "21'; then
-  pass "the java runtime starts and reports Java 21"
+if echo "$version" | grep -q 'version "25'; then
+  pass "the java runtime starts and reports Java 25"
 else
-  fail "the java runtime did not report Java 21: $(echo "$version" | head -3 | tr '\n' ' ')"
+  fail "the java runtime did not report Java 25: $(echo "$version" | head -3 | tr '\n' ' ')"
 fi
 
 # Why the base is cc-debian13 and not base-debian12, cc-debian12 or alpine.

@@ -1,5 +1,5 @@
 # Use eclipse-temurin which supports ARM64
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 
 # Install minimal packages
 RUN apt-get update && \

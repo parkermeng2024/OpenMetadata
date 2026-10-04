@@ -27,7 +27,7 @@ RUN mkdir -p /opt/openmetadata && \
     printf '#!/busybox/sh\nexec /busybox/sh "$@"\n' > /shim/bin/bash && \
     chmod 755 /shim/bin/bash
 
-FROM eclipse-temurin:21-jdk AS jre-builder
+FROM eclipse-temurin:25-jdk AS jre-builder
 
 RUN jlink \
       --add-modules ALL-MODULE-PATH \

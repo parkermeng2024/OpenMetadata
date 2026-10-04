@@ -1,5 +1,5 @@
 # Apache Jena Fuseki with bounded Graph Store uploads for OpenMetadata.
-FROM eclipse-temurin:21-jre-jammy AS fuseki-runtime
+FROM eclipse-temurin:25-jre-jammy AS fuseki-runtime
 
 # 6.2.0 fixes CVE-2026-61372: the SPARQL Update engine accepted LOAD source
 # URLs pointing at local resources, so an authenticated update could read data
@@ -90,7 +90,7 @@ ENTRYPOINT ["/entrypoint.sh"]
 # The assembler applies identical union graph and SPARQL deadlines to all three datasets.
 CMD ["./fuseki-server", "--config=/fuseki/config.ttl"]
 
-FROM eclipse-temurin:21-jdk-jammy AS extension-builder
+FROM eclipse-temurin:25-jdk-jammy AS extension-builder
 WORKDIR /extension
 COPY --from=fuseki-runtime /fuseki/fuseki-server.jar /extension/fuseki-server.jar
 COPY src/main/java /extension/src

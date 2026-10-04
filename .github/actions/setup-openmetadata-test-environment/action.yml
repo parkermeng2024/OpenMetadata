@@ -7,7 +7,7 @@ inputs:
     required: true
   java-version:
     description: Java Version to install
-    default: '21'
+    default: '25'
   npm-version:
     description: NPM Version to install
     default: 'v22.x'

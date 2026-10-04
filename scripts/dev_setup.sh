@@ -32,7 +32,7 @@ cd "$REPO_ROOT"
 # Pinned versions. Keep in sync with scripts/check_prerequisites.sh, the UI
 # package.json `engines` block, and ingestion/pyproject.toml `requires-python`.
 # ---------------------------------------------------------------------------
-JAVA_VERSION=21
+JAVA_VERSION=25
 NODE_VERSION=22
 PYTHON_PREFERRED="3.11"
 PYTHON_MIN="3.10"
@@ -353,11 +353,12 @@ ensure_java() {
   fi
 
   if [ -n "$major" ] && [ "$major" -gt "$JAVA_VERSION" ] 2>/dev/null; then
-    # The pom sets <source>/<target> 21, so the language level is fine on a newer
-    # JDK. The toolchain is the risk: Lombok 1.18.36 and JaCoCo 0.8.10 predate
-    # this JDK and fail on javac internals / unsupported class file versions.
+    # The pom sets <source>/<target> 25, so the language level is fine on a newer
+    # JDK. The toolchain is the risk: Lombok 1.18.48, JaCoCo 0.8.15 and the
+    # Spotless google-java-format are all pinned to the JDK 25 line and reject a
+    # newer javac (or a class file version they do not know).
     ok "Java $v"
-    warn "Java $v is newer than the pinned Java $JAVA_VERSION. The pom targets 21 so compilation should hold, but Lombok 1.18.36 and JaCoCo 0.8.10 predate this JDK — if the build or tests fail on annotation processing or 'Unsupported class file major version', install JDK $JAVA_VERSION and re-run (this script then pins JAVA_HOME to it automatically)."
+    warn "Java $v is newer than the pinned Java $JAVA_VERSION. The pom targets 25 so compilation should hold, but Lombok 1.18.48, JaCoCo 0.8.15 and Spotless/google-java-format are pinned to the JDK 25 line — if the build or tests fail on annotation processing, 'Unsupported class file major version' or a google-java-format javac-internals error, install JDK $JAVA_VERSION and re-run (this script then pins JAVA_HOME to it automatically)."
     setup_java_home
     return 0
   fi
@@ -374,7 +375,7 @@ ensure_java() {
   case "$PKG" in
     brew)   pkg_install "openjdk@$JAVA_VERSION" || true ;;
     apt)
-      # Debian 11 and Ubuntu 20.04 have no openjdk-21 in their archives; say so
+      # Debian 11 and Ubuntu 20.04 have no openjdk-25 in their archives; say so
       # with a fix instead of letting apt-get fail with "no installation candidate".
       if apt_has_package "openjdk-$JAVA_VERSION-jdk"; then
         pkg_install "openjdk-$JAVA_VERSION-jdk" || true

@@ -42,7 +42,7 @@ The OMJob operator addresses fundamental limitations of Kubernetes `preStop` lif
 
 ### Prerequisites
 
-- Java 21+
+- Java 25+
 - Maven 3.8+
 - Docker (for container builds)
 - Kubernetes cluster access
@@ -321,7 +321,7 @@ mvn jacoco:report
 
 ### Code Standards
 
-- Java 21 language features
+- Java 25 language features
 - Google Java Style formatting
 - Comprehensive unit test coverage
 - Integration tests with Testcontainers

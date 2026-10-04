@@ -262,7 +262,7 @@ Remember: You are a tool to augment human intelligence and capability, not to re
 OpenMetadata is a unified metadata platform for data discovery, data observability, and data governance. This is a multi-module project with Java backend services, React frontend, Python ingestion framework, and comprehensive Docker infrastructure.
 
 ## Architecture Overview
-- **Backend**: Java 21 + Dropwizard REST API framework, multi-module Maven project
+- **Backend**: Java 25 + Dropwizard REST API framework, multi-module Maven project
 - **Frontend**: React + TypeScript + Ant Design, built with Webpack and Yarn
 - **Ingestion**: Python 3.9-3.11 with Pydantic 2.x, 75+ data source connectors  
 - **Database**: MySQL (default) or PostgreSQL with Flyway migrations
@@ -273,7 +273,7 @@ OpenMetadata is a unified metadata platform for data discovery, data observabili
 
 ### Required Software Versions
 - **Python**: 3.9, 3.10, or 3.11 (NOT 3.12+)
-- **Java**: 21 (OpenJDK 21.0.8+)
+- **Java**: 25 (OpenJDK 25.0.2+)
 - **Maven**: 3.6-3.9 (tested with 3.9.11)
 - **Node.js**: 18 (LTS, NOT 20+)
 - **Yarn**: 1.22+
@@ -289,10 +289,10 @@ make prerequisites
 
 ### Install Missing Prerequisites
 ```bash
-# Install Java 21 (Ubuntu/Debian)
-sudo apt-get install -y openjdk-21-jdk
-sudo update-alternatives --set java /usr/lib/jvm/java-21-openjdk-amd64/bin/java
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+# Install Java 25 (Ubuntu/Debian)
+sudo apt-get install -y openjdk-25-jdk
+sudo update-alternatives --set java /usr/lib/jvm/java-25-openjdk-amd64/bin/java
+export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
 
 # Install Node.js 18 LTS
 curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
@@ -307,14 +307,14 @@ make install_antlr_cli
 ### Full Build Process
 **NEVER CANCEL: Build takes 45-60 minutes. ALWAYS set timeout to 70+ minutes.**
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
 mvn clean package -DskipTests
 ```
 
 ### Backend Only Build  
 **NEVER CANCEL: Takes ~15 minutes. Set timeout to 25+ minutes.**
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
 mvn clean package -DskipTests -DonlyBackend -pl !openmetadata-ui
 ```
 
@@ -377,7 +377,7 @@ yarn start  # Starts dev server on localhost:3000
 ./docker/run_local_docker.sh -m no-ui -d mysql
 
 # Or build and run manually
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
 mvn clean package -DonlyBackend -pl !openmetadata-ui
 ```
 
@@ -386,7 +386,7 @@ mvn clean package -DonlyBackend -pl !openmetadata-ui
 ### Java Tests
 **NEVER CANCEL: Takes 20-30 minutes. Set timeout to 45+ minutes.**
 ```bash
-export JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64
+export JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64
 mvn test
 ```
 
@@ -476,7 +476,7 @@ After making changes, ALWAYS test complete user scenarios:
 ## Common Issues and Workarounds
 
 ### Build Failures
-- **Java version error**: Ensure `JAVA_HOME=/usr/lib/jvm/java-21-openjdk-amd64` is exported
+- **Java version error**: Ensure `JAVA_HOME=/usr/lib/jvm/java-25-openjdk-amd64` is exported
 - **ANTLR missing**: Install with `make install_antlr_cli` - **REQUIRED for frontend tests and builds**
 - **Frontend tests fail with missing modules**: Run `make generate` and `yarn run build-check` first
 - **Python dependency conflicts**: Use Python 3.9-3.11, NOT 3.12+

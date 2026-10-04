@@ -1,6 +1,6 @@
 ---
 name: dev-setup
-description: Set up, verify, or repair a local OpenMetadata development environment on macOS or Linux. Installs the toolchain (Java 21, Maven, Node 22, Yarn 1.x, Python 3.10+, ANTLR 4.9.2, Docker), creates the Python venv, generates models, installs UI dependencies and pre-commit hooks. Use for a fresh clone, a new worktree, onboarding, or when a build fails with a missing/wrong tool.
+description: Set up, verify, or repair a local OpenMetadata development environment on macOS or Linux. Installs the toolchain (Java 25, Maven, Node 22, Yarn 1.x, Python 3.10+, ANTLR 4.9.2, Docker), creates the Python venv, generates models, installs UI dependencies and pre-commit hooks. Use for a fresh clone, a new worktree, onboarding, or when a build fails with a missing/wrong tool.
 user-invocable: true
 argument-hint: "[--check] [--slim] [--with-build] [--with-docker] [-y]"
 allowed-tools:
@@ -90,7 +90,7 @@ cd openmetadata-ui/src/main/resources/ui && yarn tsc --noEmit --version  # UI de
 1. Detects platform → `brew` / `apt` / `dnf` / `yum` / `pacman` / `zypper`.
 2. Installs the build toolchain plus the headers the ingestion wheels compile against
    (libffi, openssl, sasl/gssapi, krb5, libpq, librdkafka, unixodbc, libxml2/xslt).
-3. Ensures Java 21, Maven ≥ 3.6, Node 22, Yarn 1.x, Python ≥ 3.10, ANTLR 4.9.2, Docker.
+3. Ensures Java 25, Maven ≥ 3.6, Node 22, Yarn 1.x, Python ≥ 3.10, ANTLR 4.9.2, Docker.
 4. Creates `env/`, then runs the CLAUDE.md bootstrap sequence:
    `make install_dev_env` → `make generate` → `make yarn_install_cache` →
    `make install_test precommit_install` → `make prerequisites`.
@@ -101,7 +101,7 @@ cd openmetadata-ui/src/main/resources/ui && yarn tsc --noEmit --version  # UI de
 
 ### Maven fails with `TypeTag :: UNKNOWN`
 
-This usually means Maven is running on a newer JDK even though Java 21 is installed. Run the setup
+This usually means Maven is running on a newer JDK even though Java 25 is installed. Run the setup
 again and source `.dev-env.local.sh`; the generated environment places `$JAVA_HOME/bin` first on
 `PATH`. When mise is installed, setup also writes `.mise.local.toml`, preventing mise's prompt hook
 from immediately restoring a newer global JDK.

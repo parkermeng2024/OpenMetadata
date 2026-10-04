@@ -17,7 +17,7 @@ Your goal is code that is **readable and understandable by human engineers**, no
 ## Context
 
 OpenMetadata backend uses:
-- **Java 21** with Dropwizard REST API framework
+- **Java 25** with Dropwizard REST API framework
 - **Maven** multi-module build
 - **Flyway** for database migrations (MySQL + PostgreSQL)
 - **JUnit 5** for testing with `BaseEntityIT` for integration tests
@@ -279,7 +279,7 @@ Flag these patterns — they represent the highest-signal warnings from IntelliJ
 - Double map lookups — `if (map.containsKey(k)) { v = map.get(k); }` → use `map.getOrDefault()` or `computeIfAbsent()`
 - Redundant `String.toString()` calls
 
-**Modern Java (Java 21):**
+**Modern Java (Java 25):**
 - Use diamond operator `<>` for generic constructors
 - Use try-with-resources for all `AutoCloseable` objects — flag manual `try/finally` close patterns
 - Use `Optional` correctly: never as a field type, never as a parameter type, never assign `null` to it
