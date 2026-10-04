@@ -359,8 +359,8 @@ public class BasicAuthenticator implements AuthenticatorHandler {
               ex);
         }
       }
-      case USER_CREATE -> sendPasswordResetLink(
-          uriInfo, user, subject, INVITE_CREATE_PASSWORD_TEMPLATE);
+      case USER_CREATE ->
+          sendPasswordResetLink(uriInfo, user, subject, INVITE_CREATE_PASSWORD_TEMPLATE);
       default -> LOG.error("Invalid Password Create Type");
     }
   }

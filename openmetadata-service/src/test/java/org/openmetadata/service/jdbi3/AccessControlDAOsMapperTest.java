@@ -27,7 +27,8 @@ class AccessControlDAOsMapperTest {
   private static final String RETIRED_EVENT_TYPE = "taskResolved";
 
   private static String changeEventJson(String eventType) {
-    return """
+    return
+"""
         {"id":"%s","eventType":"%s","entityType":"glossaryTerm","userName":"admin",\
 "timestamp":1700000000000}"""
         .formatted(UUID.randomUUID(), eventType);

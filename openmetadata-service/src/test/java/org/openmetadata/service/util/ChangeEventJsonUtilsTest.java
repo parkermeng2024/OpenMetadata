@@ -15,7 +15,8 @@ import org.openmetadata.schema.utils.JsonUtils;
 class ChangeEventJsonUtilsTest {
 
   private static String changeEventJson(String eventType) {
-    return """
+    return
+"""
         {"id":"%s","eventType":"%s","entityType":"glossaryTerm","userName":"admin",\
 "timestamp":1700000000000}"""
         .formatted(UUID.randomUUID(), eventType);

@@ -130,7 +130,8 @@ public final class RdfGraphService {
     String normalizedBaseUri = baseUri.endsWith("/") ? baseUri : baseUri + "/";
     String entityUri = normalizedBaseUri + "entity/" + entityType + "/" + entityId;
     return switch (direction) {
-      case UPSTREAM -> """
+      case UPSTREAM ->
+          """
           PREFIX om: <https://open-metadata.org/ontology/>
           PREFIX prov: <http://www.w3.org/ns/prov#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -143,8 +144,9 @@ public final class RdfGraphService {
           }
           ORDER BY ?distance ?name
           """
-          .formatted(entityUri);
-      case DOWNSTREAM -> """
+              .formatted(entityUri);
+      case DOWNSTREAM ->
+          """
           PREFIX om: <https://open-metadata.org/ontology/>
           PREFIX prov: <http://www.w3.org/ns/prov#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -157,8 +159,9 @@ public final class RdfGraphService {
           }
           ORDER BY ?distance ?name
           """
-          .formatted(entityUri);
-      case BOTH -> """
+              .formatted(entityUri);
+      case BOTH ->
+          """
           PREFIX om: <https://open-metadata.org/ontology/>
           PREFIX prov: <http://www.w3.org/ns/prov#>
           PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -176,7 +179,7 @@ public final class RdfGraphService {
           }
           ORDER BY ?relationship ?name
           """
-          .formatted(entityUri, entityUri);
+              .formatted(entityUri, entityUri);
     };
   }
 

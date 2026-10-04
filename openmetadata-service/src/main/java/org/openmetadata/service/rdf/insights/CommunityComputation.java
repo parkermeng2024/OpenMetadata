@@ -270,13 +270,11 @@ public final class CommunityComputation {
       String norm = value.trim().toLowerCase(Locale.ROOT);
       return switch (norm) {
         case "lineage" -> LINEAGE;
-        case "tagcooccurrence",
-            "tag",
-            "tags",
-            "tag-co-occurrence",
-            "tag_co_occurrence" -> TAG_CO_OCCURRENCE;
-        default -> throw new IllegalArgumentException(
-            "graphType must be one of: lineage, tagCoOccurrence (got: " + value + ")");
+        case "tagcooccurrence", "tag", "tags", "tag-co-occurrence", "tag_co_occurrence" ->
+            TAG_CO_OCCURRENCE;
+        default ->
+            throw new IllegalArgumentException(
+                "graphType must be one of: lineage, tagCoOccurrence (got: " + value + ")");
       };
     }
   }

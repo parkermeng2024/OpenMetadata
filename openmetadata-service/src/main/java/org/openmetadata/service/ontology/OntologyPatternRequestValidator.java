@@ -87,11 +87,11 @@ final class OntologyPatternRequestValidator {
   private static List<PatternRole> roles(final OntologyPatternType patternType) {
     final List<PatternRole> roles =
         switch (patternType) {
-          case REGULATORY_CONTROL -> List.of(
-              PatternRole.CONTROL, PatternRole.REQUIREMENT, PatternRole.EVIDENCE);
+          case REGULATORY_CONTROL ->
+              List.of(PatternRole.CONTROL, PatternRole.REQUIREMENT, PatternRole.EVIDENCE);
           case MEASURED_KPI -> List.of(PatternRole.KPI, PatternRole.METRIC, PatternRole.DIMENSION);
-          case PRODUCT_HIERARCHY -> List.of(
-              PatternRole.PORTFOLIO, PatternRole.PRODUCT, PatternRole.FEATURE);
+          case PRODUCT_HIERARCHY ->
+              List.of(PatternRole.PORTFOLIO, PatternRole.PRODUCT, PatternRole.FEATURE);
         };
     return roles;
   }

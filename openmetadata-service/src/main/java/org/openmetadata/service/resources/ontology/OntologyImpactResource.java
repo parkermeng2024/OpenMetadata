@@ -137,12 +137,14 @@ public final class OntologyImpactResource {
     if (target != null) {
       final String type = target.getType();
       switch (type) {
-        case Entity.GLOSSARY, Entity.GLOSSARY_TERM -> authorizer.authorize(
-            securityContext,
-            new OperationContext(type, MetadataOperation.EDIT_GLOSSARY_TERMS),
-            new ResourceContext<>(type, target.getId(), null));
-        default -> throw new IllegalArgumentException(
-            "Child reassignment target must reference a glossary or glossary term");
+        case Entity.GLOSSARY, Entity.GLOSSARY_TERM ->
+            authorizer.authorize(
+                securityContext,
+                new OperationContext(type, MetadataOperation.EDIT_GLOSSARY_TERMS),
+                new ResourceContext<>(type, target.getId(), null));
+        default ->
+            throw new IllegalArgumentException(
+                "Child reassignment target must reference a glossary or glossary term");
       }
     }
   }

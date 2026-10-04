@@ -292,23 +292,26 @@ public class OntologyChangeSetRepository extends EntityRepository<OntologyChange
       final OntologyChangeSetState original, final OntologyChangeSetState updated) {
     final boolean isAllowed =
         switch (original) {
-          case DRAFT -> Set.of(
-                  OntologyChangeSetState.SUBMITTED,
-                  OntologyChangeSetState.APPLIED,
-                  OntologyChangeSetState.APPLY_FAILED,
-                  OntologyChangeSetState.DISCARDED)
-              .contains(updated);
-          case SUBMITTED -> Set.of(
-                  OntologyChangeSetState.APPLIED,
-                  OntologyChangeSetState.APPLY_FAILED,
-                  OntologyChangeSetState.DISCARDED)
-              .contains(updated);
-          case APPLY_FAILED -> Set.of(
-                  OntologyChangeSetState.DRAFT,
-                  OntologyChangeSetState.APPLIED,
-                  OntologyChangeSetState.APPLY_FAILED,
-                  OntologyChangeSetState.DISCARDED)
-              .contains(updated);
+          case DRAFT ->
+              Set.of(
+                      OntologyChangeSetState.SUBMITTED,
+                      OntologyChangeSetState.APPLIED,
+                      OntologyChangeSetState.APPLY_FAILED,
+                      OntologyChangeSetState.DISCARDED)
+                  .contains(updated);
+          case SUBMITTED ->
+              Set.of(
+                      OntologyChangeSetState.APPLIED,
+                      OntologyChangeSetState.APPLY_FAILED,
+                      OntologyChangeSetState.DISCARDED)
+                  .contains(updated);
+          case APPLY_FAILED ->
+              Set.of(
+                      OntologyChangeSetState.DRAFT,
+                      OntologyChangeSetState.APPLIED,
+                      OntologyChangeSetState.APPLY_FAILED,
+                      OntologyChangeSetState.DISCARDED)
+                  .contains(updated);
           case APPLIED, DISCARDED -> false;
         };
     if (!isAllowed) {

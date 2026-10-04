@@ -160,43 +160,43 @@ public class BuildEntityUrlHelper implements HandlebarsHelper {
     String url =
         switch (entityType) {
           case Entity.TEST_CASE ->
-          // TEST_CASE: /test-case/{fqn}/test-case-results
-          buildUrl(baseUrl, "test-case", fqn, "test-case-results");
+              // TEST_CASE: /test-case/{fqn}/test-case-results
+              buildUrl(baseUrl, "test-case", fqn, "test-case-results");
           case Entity.TEST_SUITE ->
-          // TEST_SUITE: /test-suites/{fqn}
-          buildUrl(baseUrl, "test-suites", fqn, "");
+              // TEST_SUITE: /test-suites/{fqn}
+              buildUrl(baseUrl, "test-suites", fqn, "");
           case Entity.GLOSSARY_TERM ->
-          // GLOSSARY_TERM: /glossary/{fqn}
-          buildUrl(baseUrl, Entity.GLOSSARY, fqn, "");
+              // GLOSSARY_TERM: /glossary/{fqn}
+              buildUrl(baseUrl, Entity.GLOSSARY, fqn, "");
           case Entity.TAG -> {
             // TAG: /tags/{firstPartOfFqn}
             String tagCategory = fqn.contains(".") ? fqn.split("\\.")[0] : fqn;
             yield buildUrl(baseUrl, "tags", tagCategory, "");
           }
           case Entity.INGESTION_PIPELINE ->
-          // INGESTION_PIPELINE: Complex logic depending on pipeline type
-          buildIngestionPipelineUrl(baseUrl, entityMap);
+              // INGESTION_PIPELINE: Complex logic depending on pipeline type
+              buildIngestionPipelineUrl(baseUrl, entityMap);
           case Entity.DATA_CONTRACT ->
-          // DATA_CONTRACT: Redirects to the table's contract tab
-          buildDataContractUrl(baseUrl, entityMap);
+              // DATA_CONTRACT: Redirects to the table's contract tab
+              buildDataContractUrl(baseUrl, entityMap);
           case Entity.QUERY ->
-          // QUERY: /query-view/{queryFqn}/{queryId} (standalone Query page)
-          buildQueryUrl(baseUrl, entityMap);
+              // QUERY: /query-view/{queryFqn}/{queryId} (standalone Query page)
+              buildQueryUrl(baseUrl, entityMap);
           case Entity.USER ->
-          // USER: /users/{fqn}
-          buildUrl(baseUrl, "users", fqn, "");
+              // USER: /users/{fqn}
+              buildUrl(baseUrl, "users", fqn, "");
           case Entity.TEAM ->
-          // TEAM: /settings/members/teams/{fqn}
-          buildUrl(baseUrl, "settings/members/teams", fqn, "");
+              // TEAM: /settings/members/teams/{fqn}
+              buildUrl(baseUrl, "settings/members/teams", fqn, "");
           case Entity.EVENT_SUBSCRIPTION ->
-          // EVENT_SUBSCRIPTION: /settings/notifications/alerts/{name}/configuration
-          buildUrl(baseUrl, "settings/notifications/alerts", fqn, "configuration");
+              // EVENT_SUBSCRIPTION: /settings/notifications/alerts/{name}/configuration
+              buildUrl(baseUrl, "settings/notifications/alerts", fqn, "configuration");
           case Entity.KPI ->
-          // KPI: /data-insights/kpi/edit-kpi/{name}
-          buildUrl(baseUrl, "data-insights/kpi/edit-kpi", fqn, "");
+              // KPI: /data-insights/kpi/edit-kpi/{name}
+              buildUrl(baseUrl, "data-insights/kpi/edit-kpi", fqn, "");
           case Entity.TYPE ->
-          // TYPE: /settings/customProperties/{typeName}s
-          buildUrl(baseUrl, "settings/customProperties", fqn + "s", "");
+              // TYPE: /settings/customProperties/{typeName}s
+              buildUrl(baseUrl, "settings/customProperties", fqn + "s", "");
           case Entity.DATABASE_SERVICE,
               Entity.MESSAGING_SERVICE,
               Entity.DASHBOARD_SERVICE,
@@ -214,8 +214,8 @@ public class BuildEntityUrlHelper implements HandlebarsHelper {
             yield buildUrl(baseUrl, "service/" + pluralServiceType, fqn, "");
           }
           default ->
-          // DEFAULT: /{entityType}/{fqn}
-          buildUrl(baseUrl, entityType, fqn, "");
+              // DEFAULT: /{entityType}/{fqn}
+              buildUrl(baseUrl, entityType, fqn, "");
         };
 
     if (!nullOrEmpty(view) && !nullOrEmpty(url)) {
@@ -267,16 +267,16 @@ public class BuildEntityUrlHelper implements HandlebarsHelper {
       String pipelineType = getTrimmed(entityMap, KEY_PIPELINE_TYPE).orElse("");
       return switch (PipelineType.fromValue(pipelineType)) {
         case TEST_SUITE ->
-        // TEST_SUITE: redirect to the source table's profiler tab
-        buildUrl(
-            baseUrl,
-            "table",
-            serviceFqn.replaceFirst("\\.testSuite$", ""),
-            "profiler?activeTab=Data%20Quality");
+            // TEST_SUITE: redirect to the source table's profiler tab
+            buildUrl(
+                baseUrl,
+                "table",
+                serviceFqn.replaceFirst("\\.testSuite$", ""),
+                "profiler?activeTab=Data%20Quality");
 
         case APPLICATION ->
-        // APPLICATION: /automations/{serviceFqn}/automator-details
-        buildUrl(baseUrl, "automations", serviceFqn, "automator-details");
+            // APPLICATION: /automations/{serviceFqn}/automator-details
+            buildUrl(baseUrl, "automations", serviceFqn, "automator-details");
 
         default -> {
           // DEFAULT: /service/{serviceType}s/{serviceFqn}/ingestions

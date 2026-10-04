@@ -111,21 +111,22 @@ final class ODCSTestCaseBuilder {
     ODCSQualityRule rule = ruleOnTarget.rule();
     return switch (kind) {
       case NULL_VALUES -> failureCountTest(ruleOnTarget, COLUMN_VALUES_TO_BE_NOT_NULL, List.of());
-      case DUPLICATE_VALUES -> failureCountTest(
-          ruleOnTarget, COLUMN_VALUES_TO_BE_UNIQUE, List.of());
-      case VALID_VALUES -> failureCountTest(
-          ruleOnTarget, COLUMN_VALUES_TO_BE_IN_SET, inSetParameters(rule));
-        // ODCSRuleKind only classifies a rule as PATTERN when it carries a pattern.
-      case PATTERN -> failureCountTest(
-          ruleOnTarget,
-          COLUMN_VALUES_TO_MATCH_REGEX,
-          List.of(parameter(REGEX, ODCSRuleArguments.pattern(rule).orElseThrow())));
+      case DUPLICATE_VALUES ->
+          failureCountTest(ruleOnTarget, COLUMN_VALUES_TO_BE_UNIQUE, List.of());
+      case VALID_VALUES ->
+          failureCountTest(ruleOnTarget, COLUMN_VALUES_TO_BE_IN_SET, inSetParameters(rule));
+      // ODCSRuleKind only classifies a rule as PATTERN when it carries a pattern.
+      case PATTERN ->
+          failureCountTest(
+              ruleOnTarget,
+              COLUMN_VALUES_TO_MATCH_REGEX,
+              List.of(parameter(REGEX, ODCSRuleArguments.pattern(rule).orElseThrow())));
       case COMPLETENESS -> completenessTest(ruleOnTarget);
       case MISSING_VALUES -> missingValuesTest(ruleOnTarget);
-      case TEXT_LENGTH -> columnRangeTest(
-          ruleOnTarget, COLUMN_VALUE_LENGTHS_TO_BE_BETWEEN, MIN_LENGTH, MAX_LENGTH);
-      case VALUE_RANGE -> columnRangeTest(
-          ruleOnTarget, COLUMN_VALUES_TO_BE_BETWEEN, MIN_VALUE, MAX_VALUE);
+      case TEXT_LENGTH ->
+          columnRangeTest(ruleOnTarget, COLUMN_VALUE_LENGTHS_TO_BE_BETWEEN, MIN_LENGTH, MAX_LENGTH);
+      case VALUE_RANGE ->
+          columnRangeTest(ruleOnTarget, COLUMN_VALUES_TO_BE_BETWEEN, MIN_VALUE, MAX_VALUE);
       case ROW_COUNT -> rowCountTest(ruleOnTarget);
       case SQL -> ODCSSqlRuleBuilder.build(ruleOnTarget);
       case FRESHNESS -> freshness(ruleOnTarget);

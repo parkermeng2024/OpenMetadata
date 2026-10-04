@@ -91,10 +91,13 @@ public final class ODCSTestCaseExporter {
     Map<String, String> parameters = parameters(testCase);
     Optional<ODCSQualityRule> standardRule =
         switch (definitionName(testCase)) {
-          case COLUMN_VALUES_TO_BE_NOT_NULL -> Optional.of(
-              failureRule(base, ODCSQualityRule.OdcsQualityMetric.NULL_VALUES, parameters));
-          case COLUMN_VALUES_TO_BE_UNIQUE -> Optional.of(
-              failureRule(base, ODCSQualityRule.OdcsQualityMetric.DUPLICATE_VALUES, parameters));
+          case COLUMN_VALUES_TO_BE_NOT_NULL ->
+              Optional.of(
+                  failureRule(base, ODCSQualityRule.OdcsQualityMetric.NULL_VALUES, parameters));
+          case COLUMN_VALUES_TO_BE_UNIQUE ->
+              Optional.of(
+                  failureRule(
+                      base, ODCSQualityRule.OdcsQualityMetric.DUPLICATE_VALUES, parameters));
           case COLUMN_VALUES_TO_BE_IN_SET -> validValuesRule(base, parameters);
           case COLUMN_VALUES_TO_MATCH_REGEX -> patternRule(base, parameters);
           case COLUMN_VALUES_MISSING_COUNT -> missingValuesRule(base, parameters);

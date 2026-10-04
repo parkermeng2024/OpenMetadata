@@ -587,21 +587,24 @@ public class AirflowRESTClient extends PipelineServiceClient {
   private PipelineServiceClientResponse readHealthResponse(HttpResponse<String> response) {
     return switch (response.statusCode()) {
       case 200 -> versionedStatus(new JSONObject(response.body()).getString("version"));
-      case 401, 403 -> buildStatus(
-          response.statusCode(),
-          String.format(
-              "Authentication failed for user [%s] trying to access the Airflow APIs at [%s]",
-              this.username, serviceURL));
-      case 404 -> buildStatus(
-          response.statusCode(),
-          String.format(
-              "Airflow APIs not found at [%s]. Please validate if the OpenMetadata Airflow plugin is installed correctly. %s",
-              serviceURL, DOCS_LINK));
-      default -> buildStatus(
-          response.statusCode(),
-          String.format(
-              "Unexpected status response at [%s]: code [%s] - [%s]",
-              serviceURL, response.statusCode(), response.body()));
+      case 401, 403 ->
+          buildStatus(
+              response.statusCode(),
+              String.format(
+                  "Authentication failed for user [%s] trying to access the Airflow APIs at [%s]",
+                  this.username, serviceURL));
+      case 404 ->
+          buildStatus(
+              response.statusCode(),
+              String.format(
+                  "Airflow APIs not found at [%s]. Please validate if the OpenMetadata Airflow plugin is installed correctly. %s",
+                  serviceURL, DOCS_LINK));
+      default ->
+          buildStatus(
+              response.statusCode(),
+              String.format(
+                  "Unexpected status response at [%s]: code [%s] - [%s]",
+                  serviceURL, response.statusCode(), response.body()));
     };
   }
 

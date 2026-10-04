@@ -249,8 +249,9 @@ public final class OntologyChangeSetValidator {
       case CREATE_GLOSSARY -> validateCreatedGlossary(operation);
       case CREATE_TERM -> requireEntityId(operation, operation.getTerm().getId(), "term");
       case UPDATE_TERM -> requireTarget(operation, operation.getTerm().getId(), "updated term");
-      case ADD_RELATIONSHIP, UPDATE_RELATIONSHIP, DELETE_RELATIONSHIP -> requireTarget(
-          operation, operation.getRelationship().getFromTerm().getId(), "relationship source");
+      case ADD_RELATIONSHIP, UPDATE_RELATIONSHIP, DELETE_RELATIONSHIP ->
+          requireTarget(
+              operation, operation.getRelationship().getFromTerm().getId(), "relationship source");
       case UPSERT_AXIOM -> validateAxiomTarget(operation);
       case DELETE_TERM,
           UPSERT_ATTRIBUTE,
@@ -300,8 +301,8 @@ public final class OntologyChangeSetValidator {
           case CREATE_GLOSSARY -> PayloadKind.GLOSSARY;
           case CREATE_TERM, UPDATE_TERM -> PayloadKind.TERM;
           case DELETE_TERM, DELETE_AXIOM -> PayloadKind.NONE;
-          case ADD_RELATIONSHIP, UPDATE_RELATIONSHIP, DELETE_RELATIONSHIP -> PayloadKind
-              .RELATIONSHIP;
+          case ADD_RELATIONSHIP, UPDATE_RELATIONSHIP, DELETE_RELATIONSHIP ->
+              PayloadKind.RELATIONSHIP;
           case UPSERT_ATTRIBUTE, DELETE_ATTRIBUTE -> PayloadKind.ATTRIBUTE;
           case UPSERT_MAPPING, DELETE_MAPPING -> PayloadKind.MAPPING;
           case UPSERT_AXIOM -> PayloadKind.AXIOM;

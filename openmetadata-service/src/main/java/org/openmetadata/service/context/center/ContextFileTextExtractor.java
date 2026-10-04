@@ -67,8 +67,9 @@ public class ContextFileTextExtractor {
       case Document, Presentation -> extractOfficeDocument(inputStream, file.getFileExtension());
       case CSV, Text -> extractPlainText(inputStream);
       case Image -> extractImage(inputStream, file.getFileExtension());
-      case Archive, Other -> ExtractionResult.unsupported(
-          "Text extraction is not supported for file type " + fileType);
+      case Archive, Other ->
+          ExtractionResult.unsupported(
+              "Text extraction is not supported for file type " + fileType);
     };
   }
 

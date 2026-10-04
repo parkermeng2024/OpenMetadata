@@ -1078,9 +1078,8 @@ public class MigrationUtil {
     return switch (oldType) {
       case "RequestDescription", "UpdateDescription" -> "DescriptionUpdate";
       case "RequestTag", "UpdateTag" -> "TagUpdate";
-      case "RequestApproval" -> Entity.GLOSSARY_TERM.equals(entityType)
-          ? "GlossaryApproval"
-          : "RequestApproval";
+      case "RequestApproval" ->
+          Entity.GLOSSARY_TERM.equals(entityType) ? "GlossaryApproval" : "RequestApproval";
       case "RequestTestCaseFailureResolution" -> "TestCaseResolution";
       case "RecognizerFeedbackApproval" -> "RecognizerFeedbackApproval";
       default -> "CustomTask";
@@ -1287,12 +1286,14 @@ public class MigrationUtil {
       case ENTITY_CREATED -> ActivityEventType.ENTITY_CREATED;
       case ENTITY_DELETED -> ActivityEventType.ENTITY_DELETED;
       case ENTITY_SOFT_DELETED -> ActivityEventType.ENTITY_SOFT_DELETED;
-      case DESCRIPTION -> isNestedFieldActivity(legacyThread.getAbout(), "description")
-          ? ActivityEventType.COLUMN_DESCRIPTION_UPDATED
-          : ActivityEventType.DESCRIPTION_UPDATED;
-      case TAGS -> isNestedFieldActivity(legacyThread.getAbout(), "tags")
-          ? ActivityEventType.COLUMN_TAGS_UPDATED
-          : ActivityEventType.TAGS_UPDATED;
+      case DESCRIPTION ->
+          isNestedFieldActivity(legacyThread.getAbout(), "description")
+              ? ActivityEventType.COLUMN_DESCRIPTION_UPDATED
+              : ActivityEventType.DESCRIPTION_UPDATED;
+      case TAGS ->
+          isNestedFieldActivity(legacyThread.getAbout(), "tags")
+              ? ActivityEventType.COLUMN_TAGS_UPDATED
+              : ActivityEventType.TAGS_UPDATED;
       case OWNER -> ActivityEventType.OWNER_UPDATED;
       case DOMAIN -> ActivityEventType.DOMAIN_UPDATED;
       case CUSTOM_PROPERTIES -> ActivityEventType.CUSTOM_PROPERTY_UPDATED;
@@ -1321,9 +1322,8 @@ public class MigrationUtil {
       case "owner", "owners" -> ActivityEventType.OWNER_UPDATED;
       case "domain", "domains" -> ActivityEventType.DOMAIN_UPDATED;
       case "tier" -> ActivityEventType.TIER_UPDATED;
-      default -> fieldName.startsWith("extension")
-          ? ActivityEventType.CUSTOM_PROPERTY_UPDATED
-          : null;
+      default ->
+          fieldName.startsWith("extension") ? ActivityEventType.CUSTOM_PROPERTY_UPDATED : null;
     };
   }
 
@@ -2921,16 +2921,16 @@ public class MigrationUtil {
       }
 
       return switch (legacyTaskType) {
-        case RequestApproval -> new TypeAndCategory(
-            TaskEntityType.GlossaryApproval, TaskCategory.Approval);
-        case RecognizerFeedbackApproval -> new TypeAndCategory(
-            TaskEntityType.RecognizerFeedbackApproval, TaskCategory.Review);
-        case RequestDescription, UpdateDescription -> new TypeAndCategory(
-            TaskEntityType.DescriptionUpdate, TaskCategory.MetadataUpdate);
-        case RequestTag, UpdateTag -> new TypeAndCategory(
-            TaskEntityType.TagUpdate, TaskCategory.MetadataUpdate);
-        case RequestTestCaseFailureResolution -> new TypeAndCategory(
-            TaskEntityType.TestCaseResolution, TaskCategory.Incident);
+        case RequestApproval ->
+            new TypeAndCategory(TaskEntityType.GlossaryApproval, TaskCategory.Approval);
+        case RecognizerFeedbackApproval ->
+            new TypeAndCategory(TaskEntityType.RecognizerFeedbackApproval, TaskCategory.Review);
+        case RequestDescription, UpdateDescription ->
+            new TypeAndCategory(TaskEntityType.DescriptionUpdate, TaskCategory.MetadataUpdate);
+        case RequestTag, UpdateTag ->
+            new TypeAndCategory(TaskEntityType.TagUpdate, TaskCategory.MetadataUpdate);
+        case RequestTestCaseFailureResolution ->
+            new TypeAndCategory(TaskEntityType.TestCaseResolution, TaskCategory.Incident);
         case Generic -> new TypeAndCategory(TaskEntityType.CustomTask, TaskCategory.Custom);
       };
     }

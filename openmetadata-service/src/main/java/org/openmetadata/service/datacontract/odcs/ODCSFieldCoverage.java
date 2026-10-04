@@ -159,16 +159,18 @@ public final class ODCSFieldCoverage {
     } else {
       switch (rule.treatment()) {
         case MAPPED -> {}
-        case STORED -> issues.info(
-            ODCSPaths.category(location),
-            key,
-            location,
-            String.format("`%s` is kept for ODCS export but not shown in OpenMetadata.", key));
-        case NOT_IMPORTED -> issues.warning(
-            ODCSPaths.category(location),
-            key,
-            location,
-            String.format("`%s` is not imported. %s", key, rule.reason()));
+        case STORED ->
+            issues.info(
+                ODCSPaths.category(location),
+                key,
+                location,
+                String.format("`%s` is kept for ODCS export but not shown in OpenMetadata.", key));
+        case NOT_IMPORTED ->
+            issues.warning(
+                ODCSPaths.category(location),
+                key,
+                location,
+                String.format("`%s` is not imported. %s", key, rule.reason()));
         case NESTED -> visitNested(value, rule.nested(), location, issues);
       }
     }

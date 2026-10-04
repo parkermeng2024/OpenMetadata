@@ -286,20 +286,24 @@ public class PersonaRepository extends EntityRepository<Persona> {
 
   private static Set<ContextSection> defaultSections(String entityType) {
     return switch (entityType) {
-      case Entity.PAGE -> Set.of(
-          ContextSection.TITLE_SUMMARY, ContextSection.FULL_BODY, ContextSection.TAGS);
-      case Entity.METRIC -> Set.of(
-          ContextSection.DEFINITION, ContextSection.FORMULA_EXPRESSION, ContextSection.UNIT_GRAIN);
+      case Entity.PAGE ->
+          Set.of(ContextSection.TITLE_SUMMARY, ContextSection.FULL_BODY, ContextSection.TAGS);
+      case Entity.METRIC ->
+          Set.of(
+              ContextSection.DEFINITION,
+              ContextSection.FORMULA_EXPRESSION,
+              ContextSection.UNIT_GRAIN);
       case Entity.GLOSSARY_TERM -> Set.of(ContextSection.DEFINITION);
-      default -> Set.of(
-          ContextSection.DESCRIPTION,
-          ContextSection.SCHEMA,
-          ContextSection.CONSTRAINTS,
-          ContextSection.JOINS,
-          ContextSection.TAGS,
-          ContextSection.GLOSSARY_TERMS,
-          ContextSection.ARTICLES,
-          ContextSection.METRICS);
+      default ->
+          Set.of(
+              ContextSection.DESCRIPTION,
+              ContextSection.SCHEMA,
+              ContextSection.CONSTRAINTS,
+              ContextSection.JOINS,
+              ContextSection.TAGS,
+              ContextSection.GLOSSARY_TERMS,
+              ContextSection.ARTICLES,
+              ContextSection.METRICS);
     };
   }
 

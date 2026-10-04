@@ -71,8 +71,9 @@ public final class ActivityMessageFormatter {
         addEntityInfo(formattedMessage, FormattedMessage.CardStyle.ENTITY_CREATED, message, entity);
         yield List.of(formattedMessage.withMessage(message));
       }
-      case ENTITY_UPDATED -> getFormattedMessages(
-          messageDecorator, formattedMessage, changeEvent.getChangeDescription());
+      case ENTITY_UPDATED ->
+          getFormattedMessages(
+              messageDecorator, formattedMessage, changeEvent.getChangeDescription());
       case ENTITY_SOFT_DELETED -> {
         message =
             String.format(

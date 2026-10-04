@@ -484,8 +484,8 @@ public class ODCSConverter {
       case TIME -> ODCSSchemaElement.LogicalType.TIME;
       case ARRAY -> ODCSSchemaElement.LogicalType.ARRAY;
       case MAP, STRUCT, JSON -> ODCSSchemaElement.LogicalType.OBJECT;
-      case BLOB, BYTEA, BINARY, VARBINARY, LONGBLOB, MEDIUMBLOB -> ODCSSchemaElement.LogicalType
-          .BYTES;
+      case BLOB, BYTEA, BINARY, VARBINARY, LONGBLOB, MEDIUMBLOB ->
+          ODCSSchemaElement.LogicalType.BYTES;
       case TEXT, MEDIUMTEXT, CLOB, NTEXT -> ODCSSchemaElement.LogicalType.TEXT;
       default -> ODCSSchemaElement.LogicalType.STRING;
     };

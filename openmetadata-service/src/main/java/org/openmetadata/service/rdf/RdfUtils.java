@@ -95,7 +95,8 @@ public final class RdfUtils {
           "reportingservice",
           "qualityservice",
           "observabilityservice",
-          "driveservice" -> "dcat:DataService";
+          "driveservice" ->
+          "dcat:DataService";
       case "role" -> "foaf:Group";
       case "bot" -> "foaf:Agent";
       case "policy" -> "om:Policy";

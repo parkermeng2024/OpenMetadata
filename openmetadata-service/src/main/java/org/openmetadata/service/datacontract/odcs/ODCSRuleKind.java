@@ -94,9 +94,10 @@ enum ODCSRuleKind {
   static String unsupportedReason(ODCSQualityRule rule) {
     return switch (typeOf(rule)) {
       case TEXT -> "It is a text rule: a prose expectation with nothing for OpenMetadata to run.";
-      case CUSTOM -> String.format(
-          "It is written for the '%s' engine, which runs outside OpenMetadata.",
-          nullOrEmpty(rule.getEngine()) ? "unspecified" : rule.getEngine());
+      case CUSTOM ->
+          String.format(
+              "It is written for the '%s' engine, which runs outside OpenMetadata.",
+              nullOrEmpty(rule.getEngine()) ? "unspecified" : rule.getEngine());
       case SQL, LIBRARY -> unsupportedLibraryReason(rule);
     };
   }

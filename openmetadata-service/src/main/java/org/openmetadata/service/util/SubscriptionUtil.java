@@ -298,10 +298,8 @@ public class SubscriptionUtil {
   private static String recipientTarget(Recipient recipient) {
     return switch (recipient) {
       case EmailRecipient emailRecipient -> emailRecipient.getEmail();
-      case WebhookRecipient webhookRecipient -> webhookRecipient
-          .getWebhook()
-          .getEndpoint()
-          .toString();
+      case WebhookRecipient webhookRecipient ->
+          webhookRecipient.getWebhook().getEndpoint().toString();
     };
   }
 

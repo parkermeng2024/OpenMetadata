@@ -408,8 +408,10 @@ public final class IngestionLogTailer {
   private static String message(LogStreamEndReason reason) {
     return switch (reason) {
       case RUN_FINISHED -> null;
-      case MAX_BYTES -> "Stream size limit reached. Download the full log to see the rest of this run.";
-      case MAX_DURATION -> "Stream lifetime limit reached. Reconnect with the last cursor to resume.";
+      case MAX_BYTES ->
+          "Stream size limit reached. Download the full log to see the rest of this run.";
+      case MAX_DURATION ->
+          "Stream lifetime limit reached. Reconnect with the last cursor to resume.";
       case IDLE_TIMEOUT -> "No new logs for this run. Reconnect with the last cursor to resume.";
     };
   }

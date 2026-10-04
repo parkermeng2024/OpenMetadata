@@ -138,12 +138,14 @@ final class LineageSceneHierarchy {
 
   static Optional<Ref> lensRef(SceneAsset asset, LineageLens lens) {
     return switch (lens) {
-      case DOMAIN -> Optional.ofNullable(
-          asset.self().kind() == LineageLevelKind.DOMAIN ? asset.self() : asset.domain());
-      case DATA_PRODUCT -> Optional.ofNullable(
-          asset.self().kind() == LineageLevelKind.DATA_PRODUCT
-              ? asset.self()
-              : asset.dataProduct());
+      case DOMAIN ->
+          Optional.ofNullable(
+              asset.self().kind() == LineageLevelKind.DOMAIN ? asset.self() : asset.domain());
+      case DATA_PRODUCT ->
+          Optional.ofNullable(
+              asset.self().kind() == LineageLevelKind.DATA_PRODUCT
+                  ? asset.self()
+                  : asset.dataProduct());
       case SERVICE -> Optional.ofNullable(asset.service());
     };
   }
@@ -165,7 +167,8 @@ final class LineageSceneHierarchy {
           FILE,
           SPREADSHEET,
           WORKSHEET,
-          ASSET -> true;
+          ASSET ->
+          true;
       default -> false;
     };
   }
@@ -267,8 +270,12 @@ final class LineageSceneHierarchy {
         switch (lens) {
           case DOMAIN -> nullableList(focusAsset.domain(), focusAsset.self());
           case DATA_PRODUCT -> nullableList(focusAsset.dataProduct(), focusAsset.self());
-          case SERVICE -> nullableList(
-              focusAsset.service(), focusAsset.database(), focusAsset.schema(), focusAsset.self());
+          case SERVICE ->
+              nullableList(
+                  focusAsset.service(),
+                  focusAsset.database(),
+                  focusAsset.schema(),
+                  focusAsset.self());
         };
     Set<String> seen = new LinkedHashSet<>();
     for (Ref ref : refs) {

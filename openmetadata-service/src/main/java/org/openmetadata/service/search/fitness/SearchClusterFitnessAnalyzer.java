@@ -1490,10 +1490,11 @@ public class SearchClusterFitnessAnalyzer {
           case READY -> "Cluster looks adequately sized for current data.";
           case STRAINED -> "Cluster is functional but showing pressure — see warnings.";
           case OVERLOADED -> "Cluster is undersized or failing checks — action required.";
-          default -> omIndicesMissing
-              ? "Cannot determine fitness — no OpenMetadata-managed indices found. "
-                  + "Run reindex first, or check the openmetadata.indices_missing signal."
-              : "Unable to determine cluster fitness.";
+          default ->
+              omIndicesMissing
+                  ? "Cannot determine fitness — no OpenMetadata-managed indices found. "
+                      + "Run reindex first, or check the openmetadata.indices_missing signal."
+                  : "Unable to determine cluster fitness.";
         };
     String sizingLine = "";
     if (sizing != null

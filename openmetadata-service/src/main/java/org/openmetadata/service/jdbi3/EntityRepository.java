@@ -5875,8 +5875,8 @@ public abstract class EntityRepository<T extends EntityInterface> {
         }
         case "hyperlink-cp" -> validateHyperlinkUrl(fieldValue, fieldName);
         case "entityReference" -> validateCustomPropertyEntityReference(fieldValue, fieldName);
-        case "entityReferenceList" -> validateCustomPropertyEntityReferenceList(
-            fieldValue, fieldName);
+        case "entityReferenceList" ->
+            validateCustomPropertyEntityReferenceList(fieldValue, fieldName);
         default -> {}
       }
     }
@@ -5943,8 +5943,9 @@ public abstract class EntityRepository<T extends EntityInterface> {
           LocalTime time = LocalTime.parse(fieldValue, formatter);
           yield time.format(formatter);
         }
-        default -> throw new IllegalArgumentException(
-            "Unsupported customPropertyType: " + customPropertyType);
+        default ->
+            throw new IllegalArgumentException(
+                "Unsupported customPropertyType: " + customPropertyType);
       };
     } catch (DateTimeParseException e) {
       throw new IllegalArgumentException(

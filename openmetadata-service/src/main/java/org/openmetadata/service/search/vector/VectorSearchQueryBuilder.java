@@ -375,11 +375,11 @@ public class VectorSearchQueryBuilder {
             sb.append(',');
             appendFlat(sb, "parentId", values);
           }
-            // Context memory facets: the Company Context tools scope their search to
-            // file-extracted,
-            // shared knowledge pills, and an unrecognised key here is dropped silently — which
-            // would
-            // widen those searches to every memory the caller can see.
+          // Context memory facets: the Company Context tools scope their search to
+          // file-extracted,
+          // shared knowledge pills, and an unrecognised key here is dropped silently — which
+          // would
+          // widen those searches to every memory the caller can see.
           case "sourceType" -> {
             sb.append(',');
             appendFlat(sb, "sourceType", values);
@@ -388,8 +388,8 @@ public class VectorSearchQueryBuilder {
             sb.append(',');
             appendFlat(sb, ContextMemorySearchVisibility.FIELD_VISIBILITY, values);
           }
-            // Metric facets: semantic_search returns these on every metric result, so a caller
-            // that sees "granularity": "MONTH" will reasonably filter by it.
+          // Metric facets: semantic_search returns these on every metric result, so a caller
+          // that sees "granularity": "MONTH" will reasonably filter by it.
           case "metricType" -> {
             sb.append(',');
             appendFlat(sb, "metricType", values);
@@ -398,9 +398,9 @@ public class VectorSearchQueryBuilder {
             sb.append(',');
             appendFlat(sb, "granularity", values);
           }
-            // Matches the raw enum or the custom text, because a metric whose unit is OTHER
-            // displays its customUnitOfMeasurement ("basis points") and a caller will filter by
-            // what they saw. Accepting only the stored enum would match nothing, silently.
+          // Matches the raw enum or the custom text, because a metric whose unit is OTHER
+          // displays its customUnitOfMeasurement ("basis points") and a caller will filter by
+          // what they saw. Accepting only the stored enum would match nothing, silently.
           case "unitOfMeasurement" -> {
             sb.append(',');
             appendFlatOr(sb, "unitOfMeasurement", "customUnitOfMeasurement", values);
@@ -452,14 +452,16 @@ public class VectorSearchQueryBuilder {
   private static void appendOneFlat(StringBuilder sb, String field, String val) {
     switch (val) {
       case ANY -> sb.append("{\"exists\":{\"field\":\"").append(field).append("\"}}");
-      case NONE -> sb.append("{\"bool\":{\"must_not\":{\"exists\":{\"field\":\"")
-          .append(field)
-          .append("\"}}}}");
-      default -> sb.append("{\"term\":{\"")
-          .append(field)
-          .append("\":\"")
-          .append(escape(val))
-          .append("\"}}");
+      case NONE ->
+          sb.append("{\"bool\":{\"must_not\":{\"exists\":{\"field\":\"")
+              .append(field)
+              .append("\"}}}}");
+      default ->
+          sb.append("{\"term\":{\"")
+              .append(field)
+              .append("\":\"")
+              .append(escape(val))
+              .append("\"}}");
     }
   }
 

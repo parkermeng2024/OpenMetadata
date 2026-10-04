@@ -699,7 +699,8 @@ public final class SearchUtils {
           "context_file_search_index",
           Entity.CONTEXT_FILE,
           "metric_search_index",
-          Entity.METRIC -> true;
+          Entity.METRIC ->
+          true;
       default -> false;
     };
   }
@@ -713,7 +714,8 @@ public final class SearchUtils {
           "raw_cost_analysis_report_data_index",
           "rawCostAnalysisReportData",
           "aggregated_cost_analysis_report_data_index",
-          "aggregatedCostAnalysisReportData" -> true;
+          "aggregatedCostAnalysisReportData" ->
+          true;
       default -> false;
     };
   }
@@ -763,7 +765,8 @@ public final class SearchUtils {
           "metadata_service_index",
           "metadataService",
           "drive_service_index",
-          "driveService" -> true;
+          "driveService" ->
+          true;
       default -> false;
     };
   }
@@ -780,8 +783,8 @@ public final class SearchUtils {
       case "container_search_index", Entity.CONTAINER -> Entity.CONTAINER;
       case "query_search_index", Entity.QUERY -> Entity.QUERY;
       case "stored_procedure_search_index", Entity.STORED_PROCEDURE -> Entity.STORED_PROCEDURE;
-      case "dashboard_data_model_search_index", Entity.DASHBOARD_DATA_MODEL -> Entity
-          .DASHBOARD_DATA_MODEL;
+      case "dashboard_data_model_search_index", Entity.DASHBOARD_DATA_MODEL ->
+          Entity.DASHBOARD_DATA_MODEL;
       case "api_endpoint_search_index", Entity.API_ENDPOINT -> Entity.API_ENDPOINT;
       case "api_collection_search_index", Entity.API_COLLECTION -> Entity.API_COLLECTION;
       case "metric_search_index", Entity.METRIC -> Entity.METRIC;
@@ -789,8 +792,8 @@ public final class SearchUtils {
       case "search_entity_search_index", Entity.SEARCH_INDEX -> Entity.SEARCH_INDEX;
       case "tag_search_index", Entity.TAG -> Entity.TAG;
       case "glossary_term_search_index", Entity.GLOSSARY_TERM -> Entity.GLOSSARY_TERM;
-      case SearchClient.RELATIONSHIP_TYPE_SEARCH_INDEX, Entity.RELATIONSHIP_TYPE -> Entity
-          .RELATIONSHIP_TYPE;
+      case SearchClient.RELATIONSHIP_TYPE_SEARCH_INDEX, Entity.RELATIONSHIP_TYPE ->
+          Entity.RELATIONSHIP_TYPE;
       case "glossary_search_index", Entity.GLOSSARY -> Entity.GLOSSARY;
       case "domain_search_index", Entity.DOMAIN -> Entity.DOMAIN;
       case "data_product_search_index", Entity.DATA_PRODUCT -> Entity.DATA_PRODUCT;

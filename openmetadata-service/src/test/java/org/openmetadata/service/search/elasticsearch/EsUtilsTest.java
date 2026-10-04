@@ -159,7 +159,8 @@ class EsUtilsTest {
 
   @Test
   void testParseJsonQuery_simpleTermQuery() throws JsonProcessingException {
-    String simpleQuery = """
+    String simpleQuery =
+        """
         {
           "term": {"owner": "admin"}
         }
@@ -192,7 +193,8 @@ class EsUtilsTest {
 
   @Test
   void testParseJsonQuery_queryWrapperOnly() throws JsonProcessingException {
-    String queryWrapperOnly = """
+    String queryWrapperOnly =
+        """
         {
           "query": {}
         }

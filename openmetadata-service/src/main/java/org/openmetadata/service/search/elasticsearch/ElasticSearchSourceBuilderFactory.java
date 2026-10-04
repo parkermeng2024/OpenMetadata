@@ -381,12 +381,10 @@ public class ElasticSearchSourceBuilderFactory
     }
 
     return switch (indexName) {
-      case "user_search_index",
-          "user",
-          "team_search_index",
-          "team" -> buildUserOrTeamSearchBuilderV2(searchQuery, fromOffset, size);
-      case "context_memory_search_index", "contextMemory" -> buildContextMemorySearchBuilderV2(
-          searchQuery, fromOffset, size);
+      case "user_search_index", "user", "team_search_index", "team" ->
+          buildUserOrTeamSearchBuilderV2(searchQuery, fromOffset, size);
+      case "context_memory_search_index", "contextMemory" ->
+          buildContextMemorySearchBuilderV2(searchQuery, fromOffset, size);
       default -> buildAggregateSearchBuilderV2(searchQuery, fromOffset, size, includeAggregations);
     };
   }
@@ -399,13 +397,12 @@ public class ElasticSearchSourceBuilderFactory
   public ElasticSearchRequestBuilder buildTimeSeriesSearchBuilderV2(
       String indexName, String query, int from, int size, boolean freeText) {
     return switch (indexName) {
-      case "test_case_result_search_index" -> buildTestCaseResultSearchV2(
-          query, from, size, freeText);
-      case "test_case_resolution_status_search_index" -> buildTestCaseResolutionStatusSearchV2(
-          query, from, size);
-      case "raw_cost_analysis_report_data_index",
-          "aggregated_cost_analysis_report_data_index" -> buildCostAnalysisReportDataSearchV2(
-          query, from, size);
+      case "test_case_result_search_index" ->
+          buildTestCaseResultSearchV2(query, from, size, freeText);
+      case "test_case_resolution_status_search_index" ->
+          buildTestCaseResolutionStatusSearchV2(query, from, size);
+      case "raw_cost_analysis_report_data_index", "aggregated_cost_analysis_report_data_index" ->
+          buildCostAnalysisReportDataSearchV2(query, from, size);
       default -> buildAggregateSearchBuilderV2(query, from, size);
     };
   }
@@ -681,10 +678,11 @@ public class ElasticSearchSourceBuilderFactory
       case EXACT -> buildExactRankingStageQueryV2(originalQuery, exactSignificantQuery, stage);
       case PHRASE -> buildPhraseRankingStageQueryV2(originalQuery, stage);
       case PREFIX -> buildPrefixRankingStageQueryV2(significantQuery, stage);
-      case FUZZY -> buildTextRankingStageQueryV2(
-          significantQuery, stage, assetConfig, getFuzziness(significantQuery));
-      case TOKEN_COVERAGE -> buildTokenCoverageRankingStageQueryV2(
-          significantQuery, stage, assetConfig);
+      case FUZZY ->
+          buildTextRankingStageQueryV2(
+              significantQuery, stage, assetConfig, getFuzziness(significantQuery));
+      case TOKEN_COVERAGE ->
+          buildTokenCoverageRankingStageQueryV2(significantQuery, stage, assetConfig);
       case STANDARD -> buildTextRankingStageQueryV2(significantQuery, stage, assetConfig, "0");
     };
   }

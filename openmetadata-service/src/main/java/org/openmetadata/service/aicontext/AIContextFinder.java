@@ -195,8 +195,8 @@ public class AIContextFinder {
     String via = item.getFullyQualifiedName();
     switch (item.getType()) {
       case GLOSSARY_TERM -> addRefs(assets, searchAssetsByTag(via), via);
-      case METRIC -> addRefs(
-          assets, findRelated(id, Entity.METRIC, Relationship.APPLIED_TO, true), via);
+      case METRIC ->
+          addRefs(assets, findRelated(id, Entity.METRIC, Relationship.APPLIED_TO, true), via);
       case PAGE -> addRefs(assets, findRelated(id, Entity.PAGE, Relationship.HAS, false), via);
       default -> LOG.debug("AIContext find: no routing for type {}", item.getType());
     }

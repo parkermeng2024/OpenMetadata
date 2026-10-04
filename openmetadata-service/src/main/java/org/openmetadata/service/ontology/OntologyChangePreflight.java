@@ -74,10 +74,10 @@ public final class OntologyChangePreflight {
           UPSERT_ATTRIBUTE,
           DELETE_ATTRIBUTE,
           UPSERT_MAPPING,
-          DELETE_MAPPING -> requireTermInScope(
-          operation, operation.getTargetId(), scope, plannedTerms);
-      case ADD_RELATIONSHIP, UPDATE_RELATIONSHIP, DELETE_RELATIONSHIP -> validateRelationshipScope(
-          operation, scope, plannedTerms);
+          DELETE_MAPPING ->
+          requireTermInScope(operation, operation.getTargetId(), scope, plannedTerms);
+      case ADD_RELATIONSHIP, UPDATE_RELATIONSHIP, DELETE_RELATIONSHIP ->
+          validateRelationshipScope(operation, scope, plannedTerms);
       case UPSERT_AXIOM -> validateAxiomScope(operation, scope);
       case DELETE_AXIOM -> requireAxiomInScope(operation, scope);
     }
@@ -201,9 +201,10 @@ public final class OntologyChangePreflight {
     final OperationTarget target =
         switch (operation.getOperationType()) {
           case CREATE_GLOSSARY, CREATE_TERM -> null;
-          case UPSERT_AXIOM -> operation.getTargetId() == null
-              ? null
-              : new OperationTarget(Entity.ONTOLOGY_AXIOM, operation.getTargetId());
+          case UPSERT_AXIOM ->
+              operation.getTargetId() == null
+                  ? null
+                  : new OperationTarget(Entity.ONTOLOGY_AXIOM, operation.getTargetId());
           case DELETE_AXIOM -> new OperationTarget(Entity.ONTOLOGY_AXIOM, operation.getTargetId());
           default -> new OperationTarget(Entity.GLOSSARY_TERM, operation.getTargetId());
         };

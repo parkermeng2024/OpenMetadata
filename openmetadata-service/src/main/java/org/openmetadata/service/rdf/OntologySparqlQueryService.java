@@ -90,8 +90,9 @@ public final class OntologySparqlQueryService {
       case NONE -> Inference.NONE;
       case RDFS -> Inference.RDFS;
       case OWL -> Inference.OWL;
-      case CUSTOM -> throw new IllegalArgumentException(
-          "Custom inference is available only on the administrator knowledge-graph endpoint");
+      case CUSTOM ->
+          throw new IllegalArgumentException(
+              "Custom inference is available only on the administrator knowledge-graph endpoint");
     };
   }
 

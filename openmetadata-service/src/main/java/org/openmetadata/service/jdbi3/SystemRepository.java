@@ -1051,8 +1051,10 @@ public class SystemRepository {
         case "bedrock" -> getBedrockEmbeddingMessage(llmConfig, embeddings);
         case "openai" -> getOpenAiEmbeddingMessage(llmConfig, embeddings);
         case "google" -> getGoogleEmbeddingMessage(llmConfig, embeddings);
-        default -> String.format(
-            "Unknown provider '%s'. Supported providers: djl, bedrock, openai, google", provider);
+        default ->
+            String.format(
+                "Unknown provider '%s'. Supported providers: djl, bedrock, openai, google",
+                provider);
       };
     } catch (Exception e) {
       LOG.error("Error getting embedding configuration", e);

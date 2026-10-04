@@ -34,17 +34,19 @@ public final class OntologyExpressionRdfWriter {
     final Resource subject = model.createResource(axiom.getSubjectIri().toString());
     switch (axiom.getAxiomType()) {
       case SUBCLASS_OF -> addExpressions(model, subject, RDFS.subClassOf, axiom.getExpressions());
-      case EQUIVALENT_CLASS -> addExpressions(
-          model, subject, OWL2.equivalentClass, axiom.getExpressions());
-      case DISJOINT_WITH -> addExpressions(
-          model, subject, OWL2.disjointWith, axiom.getExpressions());
+      case EQUIVALENT_CLASS ->
+          addExpressions(model, subject, OWL2.equivalentClass, axiom.getExpressions());
+      case DISJOINT_WITH ->
+          addExpressions(model, subject, OWL2.disjointWith, axiom.getExpressions());
       case CLASS_ASSERTION -> subject.addProperty(RDF.type, firstExpression(model, axiom));
-      case OBJECT_PROPERTY_ASSERTION -> subject.addProperty(
-          model.createProperty(axiom.getPropertyIri().toString()),
-          model.createResource(axiom.getTargetIri().toString()));
-      case DATA_PROPERTY_ASSERTION -> subject.addLiteral(
-          model.createProperty(axiom.getPropertyIri().toString()),
-          literal(model, axiom.getLiteral()));
+      case OBJECT_PROPERTY_ASSERTION ->
+          subject.addProperty(
+              model.createProperty(axiom.getPropertyIri().toString()),
+              model.createResource(axiom.getTargetIri().toString()));
+      case DATA_PROPERTY_ASSERTION ->
+          subject.addLiteral(
+              model.createProperty(axiom.getPropertyIri().toString()),
+              literal(model, axiom.getLiteral()));
     }
   }
 
@@ -52,8 +54,8 @@ public final class OntologyExpressionRdfWriter {
     final Resource resource =
         switch (expression.getKind()) {
           case NAMED_CLASS -> model.createResource(expression.getClassIri().toString());
-          case INTERSECTION -> collectionExpression(
-              model, OWL2.intersectionOf, expression.getOperands());
+          case INTERSECTION ->
+              collectionExpression(model, OWL2.intersectionOf, expression.getOperands());
           case UNION -> collectionExpression(model, OWL2.unionOf, expression.getOperands());
           case ONE_OF -> oneOf(model, expression);
           case RESTRICTION -> restriction(model, expression);
@@ -110,10 +112,10 @@ public final class OntologyExpressionRdfWriter {
   private void addRestrictionValue(
       final Model model, final Resource restriction, final OntologyExpression expression) {
     switch (expression.getRestrictionKind()) {
-      case SOME -> restriction.addProperty(
-          OWL2.someValuesFrom, expression(model, expression.getFiller()));
-      case ONLY -> restriction.addProperty(
-          OWL2.allValuesFrom, expression(model, expression.getFiller()));
+      case SOME ->
+          restriction.addProperty(OWL2.someValuesFrom, expression(model, expression.getFiller()));
+      case ONLY ->
+          restriction.addProperty(OWL2.allValuesFrom, expression(model, expression.getFiller()));
       case VALUE -> addHasValue(model, restriction, expression);
       case MIN, MAX, EXACT -> addCardinality(model, restriction, expression);
     }
@@ -146,8 +148,9 @@ public final class OntologyExpressionRdfWriter {
           case MIN -> isQualified ? OWL2.minQualifiedCardinality : OWL2.minCardinality;
           case MAX -> isQualified ? OWL2.maxQualifiedCardinality : OWL2.maxCardinality;
           case EXACT -> isQualified ? OWL2.qualifiedCardinality : OWL2.cardinality;
-          case SOME, ONLY, VALUE -> throw new IllegalArgumentException(
-              "Restriction kind '" + kind + "' is not a cardinality");
+          case SOME, ONLY, VALUE ->
+              throw new IllegalArgumentException(
+                  "Restriction kind '" + kind + "' is not a cardinality");
         };
     return property;
   }

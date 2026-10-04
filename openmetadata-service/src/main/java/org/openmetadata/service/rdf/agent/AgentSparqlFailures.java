@@ -44,25 +44,28 @@ public final class AgentSparqlFailures {
       case ImpersonationTargetNotFoundException missing -> impersonationNotAllowed(missing);
       case AuthenticationException unauthenticated -> authenticationRequired(unauthenticated);
       case NotAuthorizedException unauthenticated -> authenticationRequired(unauthenticated);
-        // Entity resolution on this path is the caller and policy lookup during authorization,
-        // so a failure here means the caller cannot be established; report it as unknown caller
-        // rather than a backend failure.
+      // Entity resolution on this path is the caller and policy lookup during authorization,
+      // so a failure here means the caller cannot be established; report it as unknown caller
+      // rather than a backend failure.
       case EntityNotFoundException unknownCaller -> authenticationRequired(unknownCaller);
-      case AuthorizationException forbidden -> new AgentSparqlException(
-          AgentSparqlErrorCode.RDF_QUERY_FORBIDDEN,
-          "The caller is not permitted to execute agent SPARQL queries",
-          forbidden);
+      case AuthorizationException forbidden ->
+          new AgentSparqlException(
+              AgentSparqlErrorCode.RDF_QUERY_FORBIDDEN,
+              "The caller is not permitted to execute agent SPARQL queries",
+              forbidden);
       default -> classifyExecutionFailure(failure);
     };
   }
 
   private static AgentSparqlException classifyExecutionFailure(final Throwable failure) {
     return switch (failure) {
-      case QueryCapacityException capacity -> new AgentSparqlException(
-          AgentSparqlErrorCode.EXECUTION_CAPACITY_EXHAUSTED, capacity.getMessage(), capacity);
+      case QueryCapacityException capacity ->
+          new AgentSparqlException(
+              AgentSparqlErrorCode.EXECUTION_CAPACITY_EXHAUSTED, capacity.getMessage(), capacity);
       case QueryTimeoutException timeout -> executionTimeout(timeout);
-      case OutputLimitExceededException tooLarge -> new AgentSparqlException(
-          AgentSparqlErrorCode.RESULT_OUTPUT_LIMIT_EXCEEDED, tooLarge.getMessage(), tooLarge);
+      case OutputLimitExceededException tooLarge ->
+          new AgentSparqlException(
+              AgentSparqlErrorCode.RESULT_OUTPUT_LIMIT_EXCEEDED, tooLarge.getMessage(), tooLarge);
       case RdfStorageCircuitOpenException circuitOpen -> repositoryUnavailable(circuitOpen);
       case ServiceUnavailableException disabled -> repositoryUnavailable(disabled);
       case WebApplicationException request -> classifyRequestFailure(request);

@@ -61,11 +61,11 @@ record TestLoginPendingState(SecurityConfiguration candidate, TestLoginHandshake
 
     static Stored of(SecurityConfiguration candidate, TestLoginHandshake handshake) {
       return switch (handshake) {
-        case TestLoginHandshake.Oidc oidc -> new Stored(
-            candidate, Kind.OIDC, oidc.nonce(), oidc.codeVerifier(), oidc.redirectUri());
+        case TestLoginHandshake.Oidc oidc ->
+            new Stored(candidate, Kind.OIDC, oidc.nonce(), oidc.codeVerifier(), oidc.redirectUri());
         case TestLoginHandshake.Saml saml -> new Stored(candidate, Kind.SAML, null, null, null);
-        case TestLoginHandshake.Credentials credentials -> new Stored(
-            candidate, Kind.CREDENTIALS, null, null, null);
+        case TestLoginHandshake.Credentials credentials ->
+            new Stored(candidate, Kind.CREDENTIALS, null, null, null);
       };
     }
 

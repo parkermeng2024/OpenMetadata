@@ -36,7 +36,8 @@ public final class RdfContextRegistry {
           "directory",
           "file",
           "spreadsheet",
-          "worksheet" -> "dataAsset-complete";
+          "worksheet" ->
+          "dataAsset-complete";
       case "databaseservice",
           "dashboardservice",
           "messagingservice",
@@ -49,7 +50,8 @@ public final class RdfContextRegistry {
           "reportingservice",
           "qualityservice",
           "observabilityservice",
-          "driveservice" -> "service";
+          "driveservice" ->
+          "service";
       case "user", "team", "role", "bot", "policy" -> "team";
       case "thread", "post" -> "thread";
       case "glossary",
@@ -59,12 +61,14 @@ public final class RdfContextRegistry {
           "datacontract",
           "dataproduct",
           "domain",
-          "persona" -> "governance";
+          "persona" ->
+          "governance";
       case "testdefinition",
           "testsuite",
           "testcase",
           "testcaseresult",
-          "testcaseresolutionstatus" -> "quality";
+          "testcaseresolutionstatus" ->
+          "quality";
       case "ingestionpipeline",
           "eventsubscription",
           "kpi",
@@ -73,18 +77,21 @@ public final class RdfContextRegistry {
           "app",
           "appmarketplacedefinition",
           "document",
-          "page" -> "operations";
+          "page" ->
+          "operations";
       case "llmmodel",
           "aiapplication",
           "mcpserver",
           "mcpexecution",
           "agentexecution",
-          "prompttemplate" -> "ai";
+          "prompttemplate" ->
+          "ai";
       case "workflow",
           "workflowdefinition",
           "workflowinstance",
           "workflowinstancestate",
-          "automation" -> "automation";
+          "automation" ->
+          "automation";
       default -> "base";
     };
   }

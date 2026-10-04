@@ -3364,18 +3364,22 @@ public class SearchRepository {
   private List<EntityReference> resolveEntityReferenceList(
       String fieldName, EntityInterface entity) {
     return switch (fieldName) {
-      case "owners" -> entity.getOwners() != null
-          ? JsonUtils.deepCopyList(entity.getOwners(), EntityReference.class)
-          : List.of();
-      case "domains" -> entity.getDomains() != null
-          ? JsonUtils.deepCopyList(entity.getDomains(), EntityReference.class)
-          : List.of();
-      case "dataProducts" -> entity.getDataProducts() != null
-          ? JsonUtils.deepCopyList(entity.getDataProducts(), EntityReference.class)
-          : List.of();
-      case "followers" -> entity.getFollowers() != null
-          ? JsonUtils.deepCopyList(entity.getFollowers(), EntityReference.class)
-          : List.of();
+      case "owners" ->
+          entity.getOwners() != null
+              ? JsonUtils.deepCopyList(entity.getOwners(), EntityReference.class)
+              : List.of();
+      case "domains" ->
+          entity.getDomains() != null
+              ? JsonUtils.deepCopyList(entity.getDomains(), EntityReference.class)
+              : List.of();
+      case "dataProducts" ->
+          entity.getDataProducts() != null
+              ? JsonUtils.deepCopyList(entity.getDataProducts(), EntityReference.class)
+              : List.of();
+      case "followers" ->
+          entity.getFollowers() != null
+              ? JsonUtils.deepCopyList(entity.getFollowers(), EntityReference.class)
+              : List.of();
       default -> List.of();
     };
   }
@@ -3706,19 +3710,21 @@ public class SearchRepository {
             indexMapping.getChildAliases(clusterAlias),
             List.of(new ImmutablePair<>(entityType + ".id", docId)));
       }
-      case Entity.DATA_PRODUCT -> searchClient.updateChildren(
-          GLOBAL_SEARCH_ALIAS,
-          new ImmutablePair<>("dataProducts.id", docId),
-          new ImmutablePair<>(
-              REMOVE_DATA_PRODUCTS_CHILDREN_SCRIPT,
-              Collections.singletonMap("fqn", entity.getFullyQualifiedName())));
+      case Entity.DATA_PRODUCT ->
+          searchClient.updateChildren(
+              GLOBAL_SEARCH_ALIAS,
+              new ImmutablePair<>("dataProducts.id", docId),
+              new ImmutablePair<>(
+                  REMOVE_DATA_PRODUCTS_CHILDREN_SCRIPT,
+                  Collections.singletonMap("fqn", entity.getFullyQualifiedName())));
 
-      case Entity.TAG, Entity.GLOSSARY_TERM -> searchClient.updateChildren(
-          GLOBAL_SEARCH_ALIAS,
-          new ImmutablePair<>("tags.tagFQN", entity.getFullyQualifiedName()),
-          new ImmutablePair<>(
-              REMOVE_TAGS_CHILDREN_SCRIPT,
-              Collections.singletonMap("fqn", entity.getFullyQualifiedName())));
+      case Entity.TAG, Entity.GLOSSARY_TERM ->
+          searchClient.updateChildren(
+              GLOBAL_SEARCH_ALIAS,
+              new ImmutablePair<>("tags.tagFQN", entity.getFullyQualifiedName()),
+              new ImmutablePair<>(
+                  REMOVE_TAGS_CHILDREN_SCRIPT,
+                  Collections.singletonMap("fqn", entity.getFullyQualifiedName())));
       case Entity.TEST_SUITE -> {
         TestSuite testSuite = (TestSuite) entity;
         if (Boolean.TRUE.equals(testSuite.getBasic())) {
@@ -3743,14 +3749,15 @@ public class SearchRepository {
           Entity.STORAGE_SERVICE,
           Entity.SEARCH_SERVICE,
           Entity.SECURITY_SERVICE,
-          Entity.DRIVE_SERVICE -> searchClient.deleteEntityByFields(
-          indexMapping.getChildAliases(clusterAlias),
-          List.of(new ImmutablePair<>("service.id", docId)));
-        // Knowledge Center pages are nested via FQN (parent.fqn -> parent.fqn.child),
-        // not via a parent.id field on the child doc. A recursive hard-delete on the
-        // parent must therefore also remove every descendant from search by FQN
-        // prefix; otherwise stale child docs survive in the index and re-appear in
-        // hierarchy / search results until a full reindex.
+          Entity.DRIVE_SERVICE ->
+          searchClient.deleteEntityByFields(
+              indexMapping.getChildAliases(clusterAlias),
+              List.of(new ImmutablePair<>("service.id", docId)));
+      // Knowledge Center pages are nested via FQN (parent.fqn -> parent.fqn.child),
+      // not via a parent.id field on the child doc. A recursive hard-delete on the
+      // parent must therefore also remove every descendant from search by FQN
+      // prefix; otherwise stale child docs survive in the index and re-appear in
+      // hierarchy / search results until a full reindex.
       case Entity.PAGE -> deleteEntityByFQNPrefix(entity);
       default -> {
         List<String> indexNames = indexMapping.getChildAliases(clusterAlias);

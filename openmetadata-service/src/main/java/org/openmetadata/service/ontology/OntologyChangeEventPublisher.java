@@ -78,8 +78,8 @@ public final class OntologyChangeEventPublisher {
       case ONTOLOGY_IMPORTED -> Entity.GLOSSARY;
       case ONTOLOGY_RELATIONSHIP_TYPE_UPDATED -> Entity.RELATIONSHIP_TYPE;
       case ONTOLOGY_CHANGE_SET_APPLIED -> Entity.ONTOLOGY_CHANGE_SET;
-      default -> throw new IllegalArgumentException(
-          "Unsupported ontology event type: " + eventType);
+      default ->
+          throw new IllegalArgumentException("Unsupported ontology event type: " + eventType);
     };
   }
 

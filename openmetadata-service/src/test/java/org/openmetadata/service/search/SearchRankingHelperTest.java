@@ -513,7 +513,7 @@ class SearchRankingHelperTest {
     return switch (stageName) {
       case "fuzzyName" -> RankingStage.MatchType.FUZZY;
       case "phraseName" -> RankingStage.MatchType.PHRASE;
-        // closeName is itself a partial-coverage stage, so it must not count as an identity match.
+      // closeName is itself a partial-coverage stage, so it must not count as an identity match.
       case "closeName" -> RankingStage.MatchType.TOKEN_COVERAGE;
       default -> RankingStage.MatchType.EXACT;
     };

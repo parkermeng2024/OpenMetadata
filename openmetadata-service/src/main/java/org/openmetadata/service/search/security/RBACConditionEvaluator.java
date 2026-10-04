@@ -256,20 +256,23 @@ public class RBACConditionEvaluator {
         List<String> teams = extractMethodArguments(methodRef);
         inAnyTeam(teams, collector);
       }
-      case "matchAnyServiceTag" -> matchAnyServiceAttribute(
-          extractMethodArguments(methodRef),
-          ServiceAttributeResolver::serviceIdsForTags,
-          collector);
-      case "matchAnyServiceName" -> matchAnyServiceAttribute(
-          extractMethodArguments(methodRef),
-          ServiceAttributeResolver::serviceIdsForNames,
-          collector);
-      case "matchAnyServiceEnvironment" -> matchAnyServiceAttribute(
-          extractMethodArguments(methodRef),
-          ServiceAttributeResolver::serviceIdsForEnvironments,
-          collector);
-      case "matchAnyServiceType" -> matchAnyServiceType(
-          extractMethodArguments(methodRef), collector);
+      case "matchAnyServiceTag" ->
+          matchAnyServiceAttribute(
+              extractMethodArguments(methodRef),
+              ServiceAttributeResolver::serviceIdsForTags,
+              collector);
+      case "matchAnyServiceName" ->
+          matchAnyServiceAttribute(
+              extractMethodArguments(methodRef),
+              ServiceAttributeResolver::serviceIdsForNames,
+              collector);
+      case "matchAnyServiceEnvironment" ->
+          matchAnyServiceAttribute(
+              extractMethodArguments(methodRef),
+              ServiceAttributeResolver::serviceIdsForEnvironments,
+              collector);
+      case "matchAnyServiceType" ->
+          matchAnyServiceType(extractMethodArguments(methodRef), collector);
       default -> warnUntranslatedFunction(methodName);
     }
   }

@@ -796,11 +796,12 @@ public class SessionService implements Managed {
       UserSession.UserSessionBuilder builder, ProviderTokenUpdate providerTokens) {
     return switch (providerTokens) {
       case ProviderTokenUpdate.None none -> builder;
-      case ProviderTokenUpdate.Rescheduled rescheduled -> builder.providerRenewalDueAt(
-          rescheduled.renewalDueAt());
-      case ProviderTokenUpdate.Replaced replaced -> builder
-          .providerRefreshToken(encryptIfPresent(replaced.refreshToken()))
-          .providerRenewalDueAt(replaced.renewalDueAt());
+      case ProviderTokenUpdate.Rescheduled rescheduled ->
+          builder.providerRenewalDueAt(rescheduled.renewalDueAt());
+      case ProviderTokenUpdate.Replaced replaced ->
+          builder
+              .providerRefreshToken(encryptIfPresent(replaced.refreshToken()))
+              .providerRenewalDueAt(replaced.renewalDueAt());
     };
   }
 

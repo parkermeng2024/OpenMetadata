@@ -173,17 +173,18 @@ public class ColumnRepository {
       Column column,
       String fieldsParam) {
     return switch (spec.entityType()) {
-      case TABLE -> ((TableRepository) Entity.getEntityRepository(TABLE))
-          .enrichSingleColumnFields(
-              (Table) parent,
-              column,
-              fieldsParam,
-              ((Table) parent).getOwners(),
-              authorizer,
-              securityContext);
-      case DASHBOARD_DATA_MODEL -> ((DashboardDataModelRepository)
-              Entity.getEntityRepository(DASHBOARD_DATA_MODEL))
-          .enrichSingleColumnFields((DashboardDataModel) parent, column, fieldsParam);
+      case TABLE ->
+          ((TableRepository) Entity.getEntityRepository(TABLE))
+              .enrichSingleColumnFields(
+                  (Table) parent,
+                  column,
+                  fieldsParam,
+                  ((Table) parent).getOwners(),
+                  authorizer,
+                  securityContext);
+      case DASHBOARD_DATA_MODEL ->
+          ((DashboardDataModelRepository) Entity.getEntityRepository(DASHBOARD_DATA_MODEL))
+              .enrichSingleColumnFields((DashboardDataModel) parent, column, fieldsParam);
       default -> column;
     };
   }

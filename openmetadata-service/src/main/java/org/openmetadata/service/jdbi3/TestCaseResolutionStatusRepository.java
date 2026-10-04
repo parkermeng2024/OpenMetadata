@@ -316,8 +316,9 @@ public class TestCaseResolutionStatusRepository
           return;
         }
       }
-      default -> throw new IllegalArgumentException(
-          String.format("Invalid status %s", recordEntity.getTestCaseResolutionStatusType()));
+      default ->
+          throw new IllegalArgumentException(
+              String.format("Invalid status %s", recordEntity.getTestCaseResolutionStatusType()));
     }
     persistRecord(recordFQN, recordEntity);
   }
@@ -883,10 +884,11 @@ public class TestCaseResolutionStatusRepository
     return switch (sortType == null ? INCIDENT_SORT_TYPE_DESC : sortType) {
       case INCIDENT_SORT_TYPE_ASC -> "ASC";
       case INCIDENT_SORT_TYPE_DESC -> "DESC";
-      default -> throw new IllegalArgumentException(
-          String.format(
-              "Invalid sortType '%s'. Must be one of [%s, %s]",
-              sortType, INCIDENT_SORT_TYPE_ASC, INCIDENT_SORT_TYPE_DESC));
+      default ->
+          throw new IllegalArgumentException(
+              String.format(
+                  "Invalid sortType '%s'. Must be one of [%s, %s]",
+                  sortType, INCIDENT_SORT_TYPE_ASC, INCIDENT_SORT_TYPE_DESC));
     };
   }
 

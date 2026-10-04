@@ -52,8 +52,9 @@ public final class LineagePathBuilder {
         case "upstream" -> UPSTREAM;
         case "downstream" -> DOWNSTREAM;
         case "both" -> BOTH;
-        default -> throw new IllegalArgumentException(
-            "direction must be one of: upstream, downstream, both (got: " + value + ")");
+        default ->
+            throw new IllegalArgumentException(
+                "direction must be one of: upstream, downstream, both (got: " + value + ")");
       };
     }
   }

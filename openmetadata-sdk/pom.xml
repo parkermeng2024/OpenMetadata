@@ -18,14 +18,30 @@
         <okhttp.version>4.12.0</okhttp.version>
         <junit.version>6.1.3</junit.version>
         <junit-platform.version>${org.junit.platform.version}</junit-platform.version>
-        <mockito.version>5.5.0</mockito.version>
+        <mockito.version>5.21.0</mockito.version>
         <slf4j.version>2.0.9</slf4j.version>
-        <lombok.version>1.18.30</lombok.version>
+        <lombok.version>1.18.48</lombok.version>
         <testcontainers.version>1.21.4</testcontainers.version>
         <jwt.version>4.4.0</jwt.version>
         <flyway.version>9.22.3</flyway.version>
         <json.version>20240303</json.version>
     </properties>
+
+    <!-- The root pom imports junit-bom 5.11.4, which downgrades junit-platform-* to 1.11.x while
+         this module runs junit-jupiter 6.1.3. That mixed stack makes Surefire fail to discover
+         tests (missing DiscoveryIssueReporter / NamespacedHierarchicalStore API changes), so this
+         module imports the matching BOM to keep every JUnit artifact on the same line. -->
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.junit</groupId>
+                <artifactId>junit-bom</artifactId>
+                <version>${junit.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
     <dependencies>
         <!-- OpenMetadata Generated Models -->
@@ -157,6 +173,16 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- Pinned to the same line as JUnit Jupiter above so Surefire launches the tests
+             with a matching JUnit Platform. Without it Surefire falls back to its own
+             (older) junit-platform-launcher, which fails to discover JUnit 6 tests. -->
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
@@ -183,7 +209,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>3.6.0</version>
                 <configuration>
                     <includes>
                         <include>**/*Test.java</include>
@@ -212,7 +238,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.1.2</version>
+                <version>${maven-failsafe.version}</version>
                 <configuration>
                     <includes>
                         <include>**/*IntegrationTest.java</include>

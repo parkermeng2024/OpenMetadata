@@ -136,11 +136,11 @@ public final class OntologyStructuralDiffService {
           case DISPLAY_NAME -> Objects.equals(first.getDisplayName(), second.getDisplayName());
           case DESCRIPTION -> Objects.equals(first.getDescription(), second.getDescription());
           case ENTITY_STATUS -> Objects.equals(first.getEntityStatus(), second.getEntityStatus());
-          case PARENT -> Objects.equals(
-              first.getParentSourceTermId(), second.getParentSourceTermId());
+          case PARENT ->
+              Objects.equals(first.getParentSourceTermId(), second.getParentSourceTermId());
           case ATTRIBUTES -> Objects.equals(first.getAttributes(), second.getAttributes());
-          case CONCEPT_MAPPINGS -> Objects.equals(
-              first.getConceptMappings(), second.getConceptMappings());
+          case CONCEPT_MAPPINGS ->
+              Objects.equals(first.getConceptMappings(), second.getConceptMappings());
           case RELATIONSHIPS -> Objects.equals(first.getRelationships(), second.getRelationships());
         };
     return isEqual;

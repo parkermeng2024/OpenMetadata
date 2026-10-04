@@ -203,14 +203,17 @@ public class RdfPropertyMapper {
     Object context = contextCache.get(contextName);
 
     switch (context) {
-      case List<?> contextArray -> processArrayContext(
-          contextName, contextArray, entityJson, requiredResource, requiredModel);
-      case Map<?, ?> contextMap -> processContextMappings(
-          toStringObjectMap(contextMap), entityJson, requiredResource, requiredModel);
-      case null -> throw new IllegalStateException(
-          "JSON-LD context is not loaded for " + entityType);
-      default -> throw new IllegalStateException(
-          "Unsupported JSON-LD context type: " + context.getClass().getName());
+      case List<?> contextArray ->
+          processArrayContext(
+              contextName, contextArray, entityJson, requiredResource, requiredModel);
+      case Map<?, ?> contextMap ->
+          processContextMappings(
+              toStringObjectMap(contextMap), entityJson, requiredResource, requiredModel);
+      case null ->
+          throw new IllegalStateException("JSON-LD context is not loaded for " + entityType);
+      default ->
+          throw new IllegalStateException(
+              "Unsupported JSON-LD context type: " + context.getClass().getName());
     }
 
     emitStructuredProperties(requiredEntity, entityJson, requiredResource, requiredModel);

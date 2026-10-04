@@ -350,19 +350,24 @@ public class AttachmentResource {
   private static Comparator<Asset> buildComparator(String sortBy, String sortOrder) {
     Comparator<Asset> comparator =
         switch (sortBy) {
-          case "name" -> Comparator.comparing(
-              Asset::getFileName, Comparator.nullsLast(String::compareToIgnoreCase));
-          case "createdAt", "updatedAt" -> Comparator.comparing(
-              Asset::getUpdatedAt, Comparator.nullsLast(Long::compareTo));
-          default -> throw new IllegalArgumentException(
-              "Unsupported sortBy value '" + sortBy + "'. Allowed: name, createdAt, updatedAt.");
+          case "name" ->
+              Comparator.comparing(
+                  Asset::getFileName, Comparator.nullsLast(String::compareToIgnoreCase));
+          case "createdAt", "updatedAt" ->
+              Comparator.comparing(Asset::getUpdatedAt, Comparator.nullsLast(Long::compareTo));
+          default ->
+              throw new IllegalArgumentException(
+                  "Unsupported sortBy value '"
+                      + sortBy
+                      + "'. Allowed: name, createdAt, updatedAt.");
         };
     String direction = sortOrder == null || sortOrder.isEmpty() ? "desc" : sortOrder;
     return switch (direction) {
       case "asc" -> comparator;
       case "desc" -> comparator.reversed();
-      default -> throw new IllegalArgumentException(
-          "Unsupported sortOrder value '" + sortOrder + "'. Allowed: asc, desc.");
+      default ->
+          throw new IllegalArgumentException(
+              "Unsupported sortOrder value '" + sortOrder + "'. Allowed: asc, desc.");
     };
   }
 

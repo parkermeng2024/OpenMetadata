@@ -84,7 +84,8 @@ class IngestionPipelineStatusParserTest {
 
   @Test
   void parse_noHitsYieldsEmptyList() {
-    String response = """
+    String response =
+        """
         {"hits": {"hits": []}}
         """;
 

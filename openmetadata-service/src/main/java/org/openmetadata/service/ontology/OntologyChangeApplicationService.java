@@ -204,15 +204,17 @@ public final class OntologyChangeApplicationService {
       final int failedIndex) {
     final OntologyChangeOperationResult result =
         switch (Integer.compare(index, failedIndex)) {
-          case -1 -> result(
-              operation,
-              OntologyChangeOperationResultStatus.ROLLED_BACK,
-              null,
-              null,
-              ROLLBACK_MESSAGE);
+          case -1 ->
+              result(
+                  operation,
+                  OntologyChangeOperationResultStatus.ROLLED_BACK,
+                  null,
+                  null,
+                  ROLLBACK_MESSAGE);
           case 0 -> attemptedResults.get(index);
-          default -> result(
-              operation, OntologyChangeOperationResultStatus.SKIPPED, null, null, SKIP_MESSAGE);
+          default ->
+              result(
+                  operation, OntologyChangeOperationResultStatus.SKIPPED, null, null, SKIP_MESSAGE);
         };
     return result;
   }

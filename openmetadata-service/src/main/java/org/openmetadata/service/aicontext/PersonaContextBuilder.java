@@ -838,8 +838,8 @@ public class PersonaContextBuilder {
           case Entity.GLOSSARY_TERM -> KnowledgeItem.Type.GLOSSARY_TERM;
           case Entity.PAGE -> KnowledgeItem.Type.PAGE;
           case Entity.METRIC -> KnowledgeItem.Type.METRIC;
-          default -> throw new IllegalArgumentException(
-              "Unsupported knowledge type: " + entityType);
+          default ->
+              throw new IllegalArgumentException("Unsupported knowledge type: " + entityType);
         };
     return new KnowledgeItem()
         .withId(entity.getId())

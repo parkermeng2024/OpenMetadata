@@ -289,6 +289,8 @@ class InferenceExplanationServiceTest {
   private static String binding(final String graphUri) {
     return """
         {"graph":{"type":"uri","value":"%s"}}
-        """.formatted(graphUri).trim();
+        """
+        .formatted(graphUri)
+        .trim();
   }
 }

@@ -119,19 +119,22 @@ final class ODCSImportReportBuilder {
             .withName(outcome.rule().getName())
             .withColumn(outcome.rule().getColumn());
     return switch (outcome) {
-      case TestCaseOutcome testCase -> reported
-          .withOutcome(ODCSQualityRuleOutcome.Outcome.TEST_CASE)
-          .withTestDefinition(testCase.testCase().getTestDefinition())
-          .withTestCaseName(testCase.testCase().getName());
-      case SlaOutcome sla -> reported
-          .withOutcome(ODCSQualityRuleOutcome.Outcome.SLA)
-          .withReason(
-              "Sets the contract's refresh frequency to every "
-                  + describe(sla.refreshFrequency())
-                  + ".");
-      case UnsupportedOutcome unsupported -> reported
-          .withOutcome(ODCSQualityRuleOutcome.Outcome.NOT_EXECUTED)
-          .withReason(unsupported.reason());
+      case TestCaseOutcome testCase ->
+          reported
+              .withOutcome(ODCSQualityRuleOutcome.Outcome.TEST_CASE)
+              .withTestDefinition(testCase.testCase().getTestDefinition())
+              .withTestCaseName(testCase.testCase().getName());
+      case SlaOutcome sla ->
+          reported
+              .withOutcome(ODCSQualityRuleOutcome.Outcome.SLA)
+              .withReason(
+                  "Sets the contract's refresh frequency to every "
+                      + describe(sla.refreshFrequency())
+                      + ".");
+      case UnsupportedOutcome unsupported ->
+          reported
+              .withOutcome(ODCSQualityRuleOutcome.Outcome.NOT_EXECUTED)
+              .withReason(unsupported.reason());
     };
   }
 }

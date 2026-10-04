@@ -178,8 +178,8 @@ public class SearchIndexFactory {
       case Entity.AI_APPLICATION -> new AiApplicationIndex((AIApplication) entity);
       case Entity.PROMPT_TEMPLATE -> new PromptTemplateIndex((PromptTemplate) entity);
       case Entity.AI_GOVERNANCE_POLICY -> new AiGovernancePolicyIndex((AIGovernancePolicy) entity);
-      case Entity.AI_GOVERNANCE_FRAMEWORK -> new AiGovernanceFrameworkIndex(
-          (AIGovernanceFramework) entity);
+      case Entity.AI_GOVERNANCE_FRAMEWORK ->
+          new AiGovernanceFrameworkIndex((AIGovernanceFramework) entity);
       case Entity.AI_FRAMEWORK_CONTROL -> new AiFrameworkControlIndex((AIFrameworkControl) entity);
       case Entity.AUDIT_REPORT -> new AuditReportIndex((AuditReport) entity);
       case Entity.MCP_SERVER -> new McpServerIndex((McpServer) entity);
@@ -206,8 +206,8 @@ public class SearchIndexFactory {
       case Entity.SEARCH_SERVICE -> new SearchServiceIndex((SearchService) entity);
       case Entity.SECURITY_SERVICE -> new SecurityServiceIndex((SecurityService) entity);
       case Entity.API_SERVICE -> new APIServiceIndex((ApiService) entity);
-      case Entity.SEARCH_INDEX -> new SearchEntityIndex(
-          (org.openmetadata.schema.entity.data.SearchIndex) entity);
+      case Entity.SEARCH_INDEX ->
+          new SearchEntityIndex((org.openmetadata.schema.entity.data.SearchIndex) entity);
       case Entity.PIPELINE_SERVICE -> new PipelineServiceIndex((PipelineService) entity);
       case Entity.STORAGE_SERVICE -> new StorageServiceIndex((StorageService) entity);
       case Entity.DRIVE_SERVICE -> new DriveServiceIndex((DriveService) entity);
@@ -224,17 +224,16 @@ public class SearchIndexFactory {
       case Entity.DATA_PRODUCT -> new DataProductIndex((DataProduct) entity);
       case Entity.METADATA_SERVICE -> new MetadataServiceIndex((MetadataService) entity);
       case Entity.ENTITY_REPORT_DATA -> new EntityReportDataIndex((ReportData) entity);
-      case Entity.WEB_ANALYTIC_ENTITY_VIEW_REPORT_DATA -> new WebAnalyticEntityViewReportDataIndex(
-          (ReportData) entity);
-      case Entity
-          .WEB_ANALYTIC_USER_ACTIVITY_REPORT_DATA -> new WebAnalyticUserActivityReportDataIndex(
-          (ReportData) entity);
-      case Entity.RAW_COST_ANALYSIS_REPORT_DATA -> new RawCostAnalysisReportDataIndex(
-          (ReportData) entity);
-      case Entity.AGGREGATED_COST_ANALYSIS_REPORT_DATA -> new AggregatedCostAnalysisReportDataIndex(
-          (ReportData) entity);
-      case Entity.TEST_CASE_RESOLUTION_STATUS -> new TestCaseResolutionStatusIndex(
-          (TestCaseResolutionStatus) entity);
+      case Entity.WEB_ANALYTIC_ENTITY_VIEW_REPORT_DATA ->
+          new WebAnalyticEntityViewReportDataIndex((ReportData) entity);
+      case Entity.WEB_ANALYTIC_USER_ACTIVITY_REPORT_DATA ->
+          new WebAnalyticUserActivityReportDataIndex((ReportData) entity);
+      case Entity.RAW_COST_ANALYSIS_REPORT_DATA ->
+          new RawCostAnalysisReportDataIndex((ReportData) entity);
+      case Entity.AGGREGATED_COST_ANALYSIS_REPORT_DATA ->
+          new AggregatedCostAnalysisReportDataIndex((ReportData) entity);
+      case Entity.TEST_CASE_RESOLUTION_STATUS ->
+          new TestCaseResolutionStatusIndex((TestCaseResolutionStatus) entity);
       case Entity.TEST_CASE_RESULT -> new TestCaseResultIndex((TestCaseResult) entity);
       case Entity.PIPELINE_EXECUTION -> {
         PipelineExecutionIndex.PipelineExecutionData data =

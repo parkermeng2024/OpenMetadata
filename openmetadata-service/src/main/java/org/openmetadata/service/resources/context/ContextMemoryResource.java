@@ -359,8 +359,11 @@ public class ContextMemoryResource extends EntityResource<ContextMemory, Context
       case "updatedAt" -> "updatedAt";
       case "usageCount" -> "usageCount";
       case "updatedBy" -> "updatedBy.keyword";
-      default -> throw new BadRequestException(
-          "Unsupported sortBy value '" + sortBy + "'. Allowed: updatedAt, usageCount, updatedBy.");
+      default ->
+          throw new BadRequestException(
+              "Unsupported sortBy value '"
+                  + sortBy
+                  + "'. Allowed: updatedAt, usageCount, updatedBy.");
     };
   }
 

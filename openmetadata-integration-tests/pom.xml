@@ -10,8 +10,8 @@
   <name>OpenMetadata Integration Tests</name>
   <packaging>jar</packaging>
   <properties>
-    <maven.surefire.version>3.1.2</maven.surefire.version>
-    <maven.failsafe.version>3.1.2</maven.failsafe.version>
+    <maven.surefire.version>3.6.0</maven.surefire.version>
+    <maven.failsafe.version>3.5.4</maven.failsafe.version>
     <junit.jupiter.version>${org.junit.jupiter.version}</junit.jupiter.version>
     <junit.platform.version>${org.junit.platform.version}</junit.platform.version>
     <dockerjava.version>3.4.2</dockerjava.version>

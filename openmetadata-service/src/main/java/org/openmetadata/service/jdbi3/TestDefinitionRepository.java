@@ -70,13 +70,15 @@ public class TestDefinitionRepository extends EntityRepository<TestDefinition> {
    */
   private String sortValueOf(TestDefinition entity, SortField sortField) {
     return switch (sortField) {
-      case DISPLAY_NAME -> CommonUtil.nullOrEmpty(entity.getDisplayName())
-          ? entity.getName()
-          : entity.getDisplayName();
+      case DISPLAY_NAME ->
+          CommonUtil.nullOrEmpty(entity.getDisplayName())
+              ? entity.getName()
+              : entity.getDisplayName();
       case ENTITY_TYPE -> entity.getEntityType() == null ? "" : entity.getEntityType().value();
-      case TEST_PLATFORMS -> CommonUtil.nullOrEmpty(entity.getTestPlatforms())
-          ? ""
-          : entity.getTestPlatforms().getFirst().value();
+      case TEST_PLATFORMS ->
+          CommonUtil.nullOrEmpty(entity.getTestPlatforms())
+              ? ""
+              : entity.getTestPlatforms().getFirst().value();
     };
   }
 

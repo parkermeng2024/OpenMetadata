@@ -42,11 +42,12 @@ public class WorkflowInstanceListener implements JavaDelegate {
               processInstanceId);
           updateWorkflowInstance(execution, workflowInstanceRepository);
         }
-        default -> LOG.debug(
-            "[WORKFLOW_INSTANCE_EVENT] Workflow: {}, ProcessInstance: {} - Unsupported event: {}",
-            workflowName,
-            processInstanceId,
-            eventName);
+        default ->
+            LOG.debug(
+                "[WORKFLOW_INSTANCE_EVENT] Workflow: {}, ProcessInstance: {} - Unsupported event: {}",
+                workflowName,
+                processInstanceId,
+                eventName);
       }
     } catch (Exception exc) {
       LOG.warn(

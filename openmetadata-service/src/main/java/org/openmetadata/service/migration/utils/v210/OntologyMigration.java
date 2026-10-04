@@ -68,11 +68,13 @@ public final class OntologyMigration {
 
   private static String upsertSql(final ConnectionType connectionType) {
     return switch (connectionType) {
-      case MYSQL -> "INSERT INTO relationship_type_entity (fqnHash, json) VALUES (:fqnHash, :json) "
-          + "ON DUPLICATE KEY UPDATE json = VALUES(json)";
-      case POSTGRES -> "INSERT INTO relationship_type_entity (fqnHash, json) "
-          + "VALUES (:fqnHash, CAST(:json AS jsonb)) "
-          + "ON CONFLICT (fqnHash) DO UPDATE SET json = EXCLUDED.json";
+      case MYSQL ->
+          "INSERT INTO relationship_type_entity (fqnHash, json) VALUES (:fqnHash, :json) "
+              + "ON DUPLICATE KEY UPDATE json = VALUES(json)";
+      case POSTGRES ->
+          "INSERT INTO relationship_type_entity (fqnHash, json) "
+              + "VALUES (:fqnHash, CAST(:json AS jsonb)) "
+              + "ON CONFLICT (fqnHash) DO UPDATE SET json = EXCLUDED.json";
     };
   }
 }

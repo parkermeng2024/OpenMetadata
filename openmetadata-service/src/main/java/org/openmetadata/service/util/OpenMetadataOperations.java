@@ -2217,8 +2217,9 @@ public class OpenMetadataOperations implements Callable<Integer> {
       SmartReindexPlan plan, String slackBotToken, String slackChannel) {
     ReindexingProgressMonitor progressMonitor = null;
     switch (plan.action()) {
-      case REINDEX_ALL_FOR_UPGRADE -> progressMonitor =
-          startFullReindex("Major/Minor Version Upgrade Reindexing", plan.entities());
+      case REINDEX_ALL_FOR_UPGRADE ->
+          progressMonitor =
+              startFullReindex("Major/Minor Version Upgrade Reindexing", plan.entities());
       case REINDEX_CHANGED -> {
         progressMonitor = new ReindexingProgressMonitor(plan.entities().stream().sorted().toList());
         progressMonitor.printInitialSummary();

@@ -99,10 +99,11 @@ final class RdfSchemaFixture {
     }
     return switch (type) {
       case "object" -> sampleObject(schema, location, references, depth);
-      case "array" -> depth > 4
-          ? JSON.createArrayNode()
-          : JSON.createArrayNode()
-              .add(sample(schema.path("items"), location, references, depth + 1));
+      case "array" ->
+          depth > 4
+              ? JSON.createArrayNode()
+              : JSON.createArrayNode()
+                  .add(sample(schema.path("items"), location, references, depth + 1));
       case "integer" -> JsonNodeFactory.instance.numberNode(1000L);
       case "number" -> JsonNodeFactory.instance.numberNode(0.5);
       case "boolean" -> JsonNodeFactory.instance.booleanNode(true);

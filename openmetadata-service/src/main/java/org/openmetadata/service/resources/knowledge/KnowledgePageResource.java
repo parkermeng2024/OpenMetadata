@@ -309,10 +309,11 @@ public class KnowledgePageResource extends EntityResource<Page, KnowledgePageRep
       case "name" -> "name.keyword";
       case "displayName" -> "displayName.keyword";
       case "createdAt", "updatedAt" -> "updatedAt";
-      default -> throw new IllegalArgumentException(
-          "Unsupported sortBy value '"
-              + sortBy
-              + "'. Allowed: name, displayName, createdAt, updatedAt.");
+      default ->
+          throw new IllegalArgumentException(
+              "Unsupported sortBy value '"
+                  + sortBy
+                  + "'. Allowed: name, displayName, createdAt, updatedAt.");
     };
   }
 

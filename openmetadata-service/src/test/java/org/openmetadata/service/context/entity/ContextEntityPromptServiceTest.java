@@ -21,22 +21,24 @@ class ContextEntityPromptServiceTest {
         new ContextEntityPromptService(
             (securityContext, reference) ->
                 switch (reference.getType()) {
-                  case "contextFile" -> Optional.of(
-                      new ResolvedContextEntity(
-                          fileRef,
-                          "File (PDF)",
-                          "Q3 Report",
-                          "finance.q3-report",
-                          "Quarterly planning document",
-                          "Revenue grew materially year over year."));
-                  case "page" -> Optional.of(
-                      new ResolvedContextEntity(
-                          pageRef,
-                          "Page",
-                          "Distribution Guidelines",
-                          "knowledge.distribution-guidelines",
-                          null,
-                          "Check skewness and percentiles before quoting averages."));
+                  case "contextFile" ->
+                      Optional.of(
+                          new ResolvedContextEntity(
+                              fileRef,
+                              "File (PDF)",
+                              "Q3 Report",
+                              "finance.q3-report",
+                              "Quarterly planning document",
+                              "Revenue grew materially year over year."));
+                  case "page" ->
+                      Optional.of(
+                          new ResolvedContextEntity(
+                              pageRef,
+                              "Page",
+                              "Distribution Guidelines",
+                              "knowledge.distribution-guidelines",
+                              null,
+                              "Check skewness and percentiles before quoting averages."));
                   default -> Optional.empty();
                 });
 

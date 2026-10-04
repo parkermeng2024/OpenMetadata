@@ -719,12 +719,13 @@ public class ListFilter extends Filter<ListFilter> {
     return switch (defaulted) {
       case TestCaseResolutionStatusRepository.INCIDENT_DATE_FIELD_CREATED_AT -> "i.createdAt";
       case TestCaseResolutionStatusRepository.INCIDENT_DATE_FIELD_UPDATED_AT -> "i.updatedAt";
-      default -> throw new IllegalArgumentException(
-          String.format(
-              "Invalid dateField '%s'. Must be one of [%s, %s]",
-              dateField,
-              TestCaseResolutionStatusRepository.INCIDENT_DATE_FIELD_CREATED_AT,
-              TestCaseResolutionStatusRepository.INCIDENT_DATE_FIELD_UPDATED_AT));
+      default ->
+          throw new IllegalArgumentException(
+              String.format(
+                  "Invalid dateField '%s'. Must be one of [%s, %s]",
+                  dateField,
+                  TestCaseResolutionStatusRepository.INCIDENT_DATE_FIELD_CREATED_AT,
+                  TestCaseResolutionStatusRepository.INCIDENT_DATE_FIELD_UPDATED_AT));
     };
   }
 
@@ -1255,7 +1256,7 @@ public class ListFilter extends Filter<ListFilter> {
     }
 
     return switch (testSuiteType) {
-        // We'll clean up the executable when we deprecate the /executable endpoints
+      // We'll clean up the executable when we deprecate the /executable endpoints
       case "basic", "executable" -> {
         if (Boolean.TRUE.equals(DatasourceConfig.getInstance().isMySQL())) {
           yield String.format(
@@ -1502,22 +1503,24 @@ public class ListFilter extends Filter<ListFilter> {
    */
   private String buildTaskStatusGroupCondition(String statusGroup, String column, String typeCol) {
     return switch (statusGroup.toLowerCase(Locale.ROOT)) {
-      case TASK_STATUS_GROUP_OPEN -> String.format(
-          "(%1$s IN (%2$s) OR (%3$s = '%4$s' AND %1$s = '%5$s'))",
-          column,
-          TaskBucketSql.SHARED_OPEN_STATUSES,
-          typeCol,
-          TaskBucketSql.TASK_TYPE_DAR,
-          TaskBucketSql.STATUS_APPROVED);
-      case TASK_STATUS_GROUP_ACTIVE -> String.format(
-          "%s IN (%s)", column, TaskBucketSql.ACTIVE_STATUSES);
-      case TASK_STATUS_GROUP_CLOSED -> String.format(
-          "(%1$s IN (%2$s) OR (%3$s <> '%4$s' AND %1$s = '%5$s'))",
-          column,
-          TaskBucketSql.SHARED_TERMINAL_STATUSES,
-          typeCol,
-          TaskBucketSql.TASK_TYPE_DAR,
-          TaskBucketSql.STATUS_APPROVED);
+      case TASK_STATUS_GROUP_OPEN ->
+          String.format(
+              "(%1$s IN (%2$s) OR (%3$s = '%4$s' AND %1$s = '%5$s'))",
+              column,
+              TaskBucketSql.SHARED_OPEN_STATUSES,
+              typeCol,
+              TaskBucketSql.TASK_TYPE_DAR,
+              TaskBucketSql.STATUS_APPROVED);
+      case TASK_STATUS_GROUP_ACTIVE ->
+          String.format("%s IN (%s)", column, TaskBucketSql.ACTIVE_STATUSES);
+      case TASK_STATUS_GROUP_CLOSED ->
+          String.format(
+              "(%1$s IN (%2$s) OR (%3$s <> '%4$s' AND %1$s = '%5$s'))",
+              column,
+              TaskBucketSql.SHARED_TERMINAL_STATUSES,
+              typeCol,
+              TaskBucketSql.TASK_TYPE_DAR,
+              TaskBucketSql.STATUS_APPROVED);
       default -> null;
     };
   }

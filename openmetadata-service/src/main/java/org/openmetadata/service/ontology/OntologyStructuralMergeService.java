@@ -144,9 +144,10 @@ public final class OntologyStructuralMergeService {
         case DISPLAY_NAME -> updated.setDisplayName(source.getDisplayName());
         case DESCRIPTION -> updated.setDescription(source.getDescription());
         case ENTITY_STATUS -> updated.setEntityStatus(source.getEntityStatus());
-        case PARENT -> updated.setParent(
-            OntologyStructuralTermContext.targetParent(
-                source.getParentSourceTermId(), plan.context()));
+        case PARENT ->
+            updated.setParent(
+                OntologyStructuralTermContext.targetParent(
+                    source.getParentSourceTermId(), plan.context()));
         case ATTRIBUTES -> updated.setAttributes(List.copyOf(source.getAttributes()));
         case CONCEPT_MAPPINGS -> updated.setConceptMappings(mergedMappings(updated, source));
         case RELATIONSHIPS -> {}
