@@ -281,13 +281,13 @@ ensure_homebrew() {
 }
 
 # Base build toolchain plus the headers the ingestion wheels compile against
-# (thrift/sasl, kerberos, postgres, kafka, odbc, lxml, cryptography).
+# (thrift/sasl, kerberos, postgres, mysql, kafka, odbc, lxml, cryptography).
 install_base_packages() {
   case "$PKG" in
     brew)
       # Modern bash: scripts/check_prerequisites.sh uses `declare -A`, which
       # macOS's bundled bash 3.2 does not support.
-      pkg_install bash git curl unzip jq openssl@3 libpq librdkafka unixodbc cyrus-sasl krb5 || true
+      pkg_install bash git curl unzip jq openssl@3 libpq librdkafka unixodbc cyrus-sasl krb5 mysql-client || true
       ;;
     apt)
       pkg_install build-essential git curl unzip jq pkg-config \
@@ -590,9 +590,21 @@ install_node_via_nvm() {
   NODE_BIN_DIR="$(dirname "$(command -v node)")"
 }
 
+# npm's global prefix is not always $NODE_BIN_DIR: Homebrew's node@22 installs
+# global packages under $(brew --prefix), so `yarn` lands in $(brew --prefix)/bin
+# rather than in the keg's bin. Accept whichever of the two resolves.
+resolve_yarn() {
+  if [ -n "$NODE_BIN_DIR" ] && [ -x "$NODE_BIN_DIR/yarn" ]; then
+    printf '%s' "$NODE_BIN_DIR/yarn"
+    return 0
+  fi
+  command -v yarn 2>/dev/null || true
+}
+
 ensure_yarn() {
-  local selected_yarn="${NODE_BIN_DIR:+$NODE_BIN_DIR/yarn}"
-  if [ -n "$selected_yarn" ] && [ -x "$selected_yarn" ]; then
+  local selected_yarn
+  selected_yarn="$(resolve_yarn)"
+  if [ -n "$selected_yarn" ]; then
     local v
     v="$("$selected_yarn" --version 2>/dev/null)"
     case "$v" in
@@ -611,8 +623,9 @@ ensure_yarn() {
   elif have npm; then
     run npm install -g yarn@1.22.22 || run $SUDO npm install -g yarn@1.22.22
   fi
-  if [ -n "$NODE_BIN_DIR" ] && [ -x "$NODE_BIN_DIR/yarn" ]; then
-    ok "Yarn $("$NODE_BIN_DIR/yarn" --version) ($NODE_BIN_DIR/yarn)"
+  selected_yarn="$(resolve_yarn)"
+  if [ -n "$selected_yarn" ]; then
+    ok "Yarn $("$selected_yarn" --version) ($selected_yarn)"
   else
     fail "Could not install Yarn Classic for Node $NODE_VERSION."
   fi
@@ -836,15 +849,16 @@ setup_venv() {
   info "Using $(python --version 2>&1) from $VIRTUAL_ENV"
 }
 
-# Homebrew keeps openssl/cyrus-sasl/krb5/libpq/unixodbc keg-only: installed, but
-# not linked into /usr/local, so a source build of sasl/kerberos/psycopg cannot
-# find their headers. Point the compiler at the kegs for the pip phase.
+# Homebrew keeps openssl/cyrus-sasl/krb5/libpq/unixodbc/mysql-client keg-only:
+# installed, but not linked into /usr/local, so a source build of
+# sasl/kerberos/psycopg/mysqlclient cannot find their headers. Point the
+# compiler at the kegs for the pip phase.
 export_brew_build_flags() {
   [ "$OS" = macos ] || return 0
   have brew || return 0
   local f prefix ldflags cppflags pcpath
   ldflags=""; cppflags=""; pcpath=""
-  for f in openssl@3 cyrus-sasl krb5 libpq unixodbc; do
+  for f in openssl@3 cyrus-sasl krb5 libpq unixodbc mysql-client; do
     prefix="$(brew --prefix "$f" 2>/dev/null || true)"
     [ -n "$prefix" ] && [ -d "$prefix" ] || continue
     [ -d "$prefix/lib" ] && ldflags="$ldflags -L$prefix/lib"
@@ -888,6 +902,10 @@ install_ui_deps() {
 }
 
 install_precommit() {
+  # `install_test` builds mysqlclient from source, which on macOS needs the
+  # keg-only mysql-client headers on PKG_CONFIG_PATH — the same export the
+  # ingestion install does.
+  export_brew_build_flags
   run make -C "$REPO_ROOT" install_test
   run make -C "$REPO_ROOT" precommit_install
   ok "pre-commit hooks installed (format + license gate on every commit)"

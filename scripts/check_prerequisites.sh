@@ -36,7 +36,7 @@ docker["required_version"]="20 21 22 23 24 25 26 27 28 29"
 declare -A maven
 maven["name"]="Maven"
 maven["version_command"]="mvn --version | head -n1 | awk '{print \$3}'"
-maven["required_version"]="3.6 3.7 3.8 3.9"
+maven["required_version"]="3.6 3.7 3.8 3.9 3.10"
 
 declare -A java
 java["name"]="Java"
