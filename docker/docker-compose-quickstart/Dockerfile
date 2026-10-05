@@ -38,29 +38,30 @@ RUN mkdir -p /opt/openmetadata && \
 # Temurin rather than the runtime's own distro, even though that puts the
 # builder on a newer glibc (Ubuntu 26.04 / 2.43) than the runtime (debian 13 /
 # 2.41). What matters is not the builder image's glibc but what the JDK binaries
-# jlink copies were linked against: Adoptium builds those for portability, so the
-# output requires at most GLIBC_2.17. Building the same runtime from
-# debian:13-slim + openjdk-25-jdk-headless raises that floor to GLIBC_2.38 for no
-# size win (96 MB vs 100 MB before pruning), which would pin the image to
-# trixie-era bases and break on any rollback to debian 12. Temurin is also the
-# distribution actions/setup-java pins across this repo's CI.
+# were linked against: Adoptium builds those for portability, so they require at
+# most GLIBC_2.17. Building the same runtime from debian:13-slim +
+# openjdk-25-jdk-headless raises that floor to GLIBC_2.38 for no size win, which
+# would pin the image to trixie-era bases and break on any rollback to debian 12.
+# Temurin is also the distribution actions/setup-java pins across this repo's CI.
 #
-# ALL-MODULE-PATH on purpose: the app reaches deep into the JDK at runtime
-# (dropwizard yaml -> java.beans, postgresql -> java.sql + java.naming), and a
-# pruned module only fails on the code path that needed it.
+# The JDK tree is copied as-is: no jlink. Temurin's JDK 25 images ship no jmods
+# (they are jlink'd upstream), and since JDK 24 `--add-modules ALL-MODULE-PATH`
+# additionally demands an explicit --module-path, so the step cannot run at all.
+# Taking the whole JDK rather than a JRE image is deliberate: the app reaches
+# deep into it at runtime (dropwizard yaml -> java.beans, postgresql -> java.sql
+# + java.naming) and a pruned runtime only fails on the code path that needed it,
+# which is what ALL-MODULE-PATH used to guarantee. The JRE images also drop jcmd
+# and jstack, which bin/thread-monitor.sh and the distroless debug base exist for.
+# The cost is size: ~160 MB more than the stripped jlink output.
 FROM eclipse-temurin:25-jdk AS jre-builder
 
-RUN jlink \
-      --add-modules ALL-MODULE-PATH \
-      --strip-debug \
-      --no-man-pages \
-      --no-header-files \
-      --compress=zip-6 \
-      --output /javaruntime
+# --no-man-pages / --no-header-files are compile-time only; the jlink output used
+# to omit both, along with lib/src.zip.
+RUN rm -rf ${JAVA_HOME}/man ${JAVA_HOME}/include ${JAVA_HOME}/lib/src.zip
 
-# ALL-MODULE-PATH also ships javac, jshell, jrunscript and jwebserver. Keep the
-# runtime, the diagnostics and keytool, which operators need to import a custom CA.
-RUN find /javaruntime/bin -type f \
+# The JDK also ships javac, jshell, jrunscript and jwebserver. Keep the runtime,
+# the diagnostics and keytool, which operators need to import a custom CA.
+RUN find ${JAVA_HOME}/bin -type f \
       ! -name java ! -name jcmd ! -name jstack ! -name jmap \
       ! -name jinfo ! -name jps ! -name jstat ! -name jfr ! -name keytool \
       -delete
@@ -97,12 +98,12 @@ LABEL org.open-metadata.commit-id=$COMMIT_ID
 
 # bin/openmetadata-server-start.sh and bootstrap/openmetadata-ops.sh both prefer
 # $JAVA_HOME/bin/java over a bare `java`, so this is what points them at the
-# jlink runtime. The JVM tuning stays where it has always been -- those scripts --
+# runtime. The JVM tuning stays where it has always been -- those scripts --
 # which keeps OPENMETADATA_HEAP_OPTS and OPENMETADATA_JVM_PERFORMANCE_OPTS working.
 ENV JAVA_HOME=/opt/java/openjdk
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
-COPY --from=jre-builder /javaruntime ${JAVA_HOME}
+COPY --from=jre-builder /opt/java/openjdk ${JAVA_HOME}
 COPY --from=dist /shim/bin /bin
 COPY --from=dist /opt/openmetadata /opt/openmetadata
 COPY --chmod=755 docker/openmetadata-start.sh /
