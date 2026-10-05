@@ -44,6 +44,7 @@ jest.mock('../../../../hooks/useApplicationStore', () => ({
     currentUser: {
       displayName: 'Test User',
       email: 'test@example.com',
+      name: 'testuser',
     },
     selectedPersona: null,
     setAppVersion: mockSetAppVersion,
@@ -93,13 +94,22 @@ jest.mock('../../../../components/Auth/AuthProviders/AuthProvider', () => ({
   useAuthProvider: () => ({ onLogoutHandler: mockOnLogoutHandler }),
 }));
 
+const mockProfilePictureNames: Array<string | undefined> = [];
 jest.mock(
   '../../../../components/common/ProfilePicture/ProfilePicture',
   () => ({
     __esModule: true,
-    default: ({ displayName }: { displayName?: string }) => (
-      <span data-testid="profile-picture">{displayName}</span>
-    ),
+    default: ({
+      displayName,
+      name,
+    }: {
+      displayName?: string;
+      name?: string;
+    }) => {
+      mockProfilePictureNames.push(name);
+
+      return <span data-testid="profile-picture">{displayName}</span>;
+    },
   })
 );
 
@@ -195,6 +205,7 @@ describe('AIUserMenu', () => {
     document.documentElement.classList.remove('dark-mode');
     mockAppVersion = '1.0.0';
     mockGetHelpItems.mockReturnValue([]);
+    mockProfilePictureNames.length = 0;
   });
 
   it('renders the trigger button with the user display name', () => {
@@ -202,6 +213,15 @@ describe('AIUserMenu', () => {
 
     expect(screen.getByTestId('ask-ai-user-menu-trigger')).toBeInTheDocument();
     expect(screen.getAllByText('Test User').length).toBeGreaterThanOrEqual(1);
+  });
+
+  it('resolves the avatar by user name, never by email', () => {
+    renderMenu();
+
+    expect(mockProfilePictureNames.length).toBeGreaterThan(0);
+    expect(mockProfilePictureNames).not.toContain('test@example.com');
+
+    mockProfilePictureNames.forEach((name) => expect(name).toBe('testuser'));
   });
 
   it('shows "Default" as the persona name when no persona is selected', () => {

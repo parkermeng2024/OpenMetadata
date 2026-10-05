@@ -46,6 +46,7 @@ import { EntityReference } from '../../../../generated/entity/type';
 import { useApplicationStore } from '../../../../hooks/useApplicationStore';
 import { usePersonalSpaceStore } from '../../../../hooks/usePersonalSpaceStore';
 import { getVersion } from '../../../../rest/miscAPI';
+import { getNameFromEmail } from '../../../../utils/AuthProvider.util';
 import { getEntityName } from '../../../../utils/EntityNameUtils';
 import { languageSelectOptions } from '../../../../utils/i18next/i18nextUtil';
 import i18n from '../../../../utils/i18next/LocalUtil';
@@ -251,8 +252,11 @@ const AIUserMenu: React.FC<AIUserMenuProps> = ({ collapsed = false }) => {
       'User',
     [currentUser]
   );
-  const email = useMemo(
-    () => currentUser?.email ?? currentUser?.name ?? '',
+  // ProfilePicture resolves the avatar through /users/name/{name}, which matches
+  // the entity name - not the email. Passing the email here 404s for every user
+  // whose name differs from their address (e.g. the seeded admin).
+  const userName = useMemo(
+    () => currentUser?.name ?? getNameFromEmail(currentUser?.email ?? ''),
     [currentUser]
   );
   const currentLocale = i18n.language ?? '';
@@ -432,7 +436,7 @@ const AIUserMenu: React.FC<AIUserMenuProps> = ({ collapsed = false }) => {
           }
         )}
         data-testid="ask-ai-user-menu-trigger">
-        <ProfilePicture displayName={displayName} name={email} size="sm" />
+        <ProfilePicture displayName={displayName} name={userName} size="sm" />
         {!collapsed && (
           <Box
             align="start"
@@ -467,7 +471,7 @@ const AIUserMenu: React.FC<AIUserMenuProps> = ({ collapsed = false }) => {
               gap={3}>
               <ProfilePicture
                 displayName={displayName}
-                name={email}
+                name={userName}
                 width="40"
               />
               <Box
