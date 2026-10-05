@@ -61,6 +61,14 @@ class IndexResourceTest {
   }
 
   @Test
+  void testIsUiAvailableAfterInitialize() {
+    // The test classpath bundles /assets/index.html, so a successful initialize means the
+    // servlet can serve the shell. The opposite case (no-ui mode) is covered by
+    // OpenMetadataAssetServletTest.
+    assertTrue(IndexResource.isUiAvailable(), "UI assets are bundled on the test classpath");
+  }
+
+  @Test
   void testStaticGetIndexFileWithNonce() {
     String testNonce = "testNonce123ABC==";
     String html = IndexResource.getIndexFile("/", testNonce);

@@ -176,6 +176,13 @@ public class OpenMetadataAssetServlet extends AssetServlet {
    */
   private void writeIndexHtml(HttpServletRequest req, HttpServletResponse resp, String cspNonce)
       throws IOException {
+    if (!IndexResource.isUiAvailable()) {
+      // No-ui mode ships no shell, so there is nothing to serve for the root path or an SPA
+      // route. Answer 404 rather than letting getIndexFile() throw and surface as a 500 for
+      // every unmatched route (which masks real 404s, e.g. /healthcheck on the app port).
+      resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+      return;
+    }
     String etag = IndexResource.getIndexEtag(this.basePath);
     if (!cspRequiresPerRequestBody()) {
       resp.setHeader("ETag", etag);

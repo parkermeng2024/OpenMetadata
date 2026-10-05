@@ -383,6 +383,7 @@ public class OpenMetadataAssetServletTest {
 
     try (MockedStatic<IndexResource> indexResource =
         org.mockito.Mockito.mockStatic(IndexResource.class)) {
+      indexResource.when(IndexResource::isUiAvailable).thenReturn(true);
       indexResource.when(() -> IndexResource.getIndexEtag("/")).thenReturn(etag);
       servlet.doGet(request, response);
     }
@@ -407,6 +408,7 @@ public class OpenMetadataAssetServletTest {
 
     try (MockedStatic<IndexResource> indexResource =
         org.mockito.Mockito.mockStatic(IndexResource.class)) {
+      indexResource.when(IndexResource::isUiAvailable).thenReturn(true);
       indexResource.when(() -> IndexResource.getIndexEtag("/")).thenReturn(currentEtag);
       indexResource
           .when(() -> IndexResource.getIndexFile("/", null))
@@ -446,6 +448,7 @@ public class OpenMetadataAssetServletTest {
 
     try (MockedStatic<IndexResource> indexResource =
         org.mockito.Mockito.mockStatic(IndexResource.class)) {
+      indexResource.when(IndexResource::isUiAvailable).thenReturn(true);
       indexResource
           .when(() -> IndexResource.getIndexFile("/", nonce))
           .thenReturn("<html>nonce=" + nonce + "</html>");
@@ -474,6 +477,7 @@ public class OpenMetadataAssetServletTest {
 
     try (MockedStatic<IndexResource> indexResource =
         org.mockito.Mockito.mockStatic(IndexResource.class)) {
+      indexResource.when(IndexResource::isUiAvailable).thenReturn(true);
       indexResource.when(() -> IndexResource.getIndexEtag("/")).thenReturn(etag);
       servlet.doGet(request, response);
     }
@@ -498,5 +502,52 @@ public class OpenMetadataAssetServletTest {
   public void testApiPathsAreNotSpaRoutes() {
     assertFalse(servlet.isSpaRoute("/api/v1/system/version"));
     assertFalse(servlet.isSpaRoute("/openapi.json"));
+  }
+
+  @Test
+  public void testRootPathAnswers404WhenUiAssetsAreNotBundled() throws Exception {
+    // no-ui mode (stacks started with -m no-ui) ships no /assets/index.html, so the shell was
+    // never loaded. The root path must answer 404 instead of letting getIndexFile throw and
+    // surface as a 500 that reads like a server fault.
+    String path = "/";
+    when(request.getRequestURI()).thenReturn(path);
+    when(request.getContextPath()).thenReturn("");
+    when(request.getAttribute("cspNonce")).thenReturn(null);
+
+    try (MockedStatic<IndexResource> indexResource =
+        org.mockito.Mockito.mockStatic(IndexResource.class)) {
+      indexResource.when(IndexResource::isUiAvailable).thenReturn(false);
+      servlet.doGet(request, response);
+
+      // Must bail out before touching the shell at all.
+      indexResource.verify(() -> IndexResource.getIndexEtag(anyString()), never());
+    }
+
+    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
+    verify(response, never()).getWriter();
+  }
+
+  @Test
+  public void testUnmatchedRouteAnswers404WhenUiAssetsAreNotBundled() throws Exception {
+    // Same no-ui guard on the SPA fallback: an unmatched path such as /healthcheck (which only
+    // exists on the admin port) has to stay a 404 rather than turning into a 500.
+    String path = "/healthcheck";
+    when(request.getRequestURI()).thenReturn(path);
+    when(request.getContextPath()).thenReturn("");
+    when(request.getPathInfo()).thenReturn(path);
+    when(request.getServletPath()).thenReturn("");
+    when(request.getHeader("Accept-Encoding")).thenReturn(null);
+    when(request.getMethod()).thenReturn("GET");
+    when(response.getStatus()).thenReturn(HttpServletResponse.SC_NOT_FOUND);
+
+    try (MockedStatic<IndexResource> indexResource =
+        org.mockito.Mockito.mockStatic(IndexResource.class)) {
+      indexResource.when(IndexResource::isUiAvailable).thenReturn(false);
+      servlet.doGet(request, response);
+
+      indexResource.verify(() -> IndexResource.getIndexEtag(anyString()), never());
+    }
+
+    verify(response).sendError(HttpServletResponse.SC_NOT_FOUND);
   }
 }

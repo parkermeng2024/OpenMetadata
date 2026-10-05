@@ -113,6 +113,18 @@ public class IndexResource {
     return StringEscapeUtils.escapeEcmaScript(value);
   }
 
+  /**
+   * Whether the SPA shell was found on the classpath at {@link #initialize}: false in no-ui mode,
+   * where the running distribution ships no {@code /assets/index.html} (dev stacks started with
+   * {@code -m no-ui}).
+   *
+   * <p>Callers that would otherwise trip {@link #getIndexFile(String)}'s "not initialized"
+   * exception — the asset servlet's shell-serving paths in particular — use this to answer 404.
+   */
+  public static boolean isUiAvailable() {
+    return configProcessedHtml != null;
+  }
+
   public static String getIndexFile(String basePath) {
     String html = configProcessedHtml;
     if (html == null) {
