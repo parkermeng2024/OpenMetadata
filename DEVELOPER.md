@@ -47,6 +47,18 @@ For connector-specific development, see [skills/README.md](skills/README.md).
 - Run `mvn spotless:apply` before every commit
 - Every new REST endpoint needs a corresponding `*IT.java` in `openmetadata-integration-tests/`
 
+**Phantom "cannot be resolved" errors in VS Code**
+
+`openmetadata-service` resolves `org.openmetadata.schema.*` through `openmetadata-spec/target/classes`,
+not through source. A Maven re-import — editing a `pom.xml`, or running `Java: Clean Java Language
+Server Workspace` — makes m2e clean **every** module's `target/classes`, so each generated-type import
+turns red even though the code compiles (`100 problems reported for /EntityCsv.java` and friends).
+Rebuild once to clear it:
+
+```bash
+mvn -DskipTests -DonlyBackend -pl '!openmetadata-ui' package   # ~3 min
+```
+
 ### React/TypeScript Frontend
 
 ```
@@ -147,7 +159,7 @@ openmetadata-spec/src/main/resources/json/schema/
 
                     ↓ Code generation ↓
 
-Java POJOs:     jsonschema2pojo → openmetadata-spec/target/generated-sources/
+Java POJOs:     jsonschema2pojo → openmetadata-spec/target/generated-sources/jsonschema2pojo/
 Python models:  datamodel-code-generator → ingestion/src/metadata/generated/
 TypeScript:     QuickType → openmetadata-ui/.../ui/src/generated/
 UI forms:       parseSchemas.js → resolved JSON for RJSF auto-rendering
