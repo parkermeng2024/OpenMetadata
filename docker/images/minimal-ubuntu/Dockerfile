@@ -32,7 +32,8 @@ RUN apt install -y python-dev && \
     python /tmp/get-pip.py
 
 # java
-RUN apt install -y openjdk-21-jdk
+# NOTE: unused image. The xenial base predates OpenJDK 25 (and 21), so this layer does not build.
+RUN apt install -y openjdk-25-jdk
 # maven
 #RUN apt install -y maven=3.3.9-3
 
