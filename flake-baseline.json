@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-04T04:09:12Z",
+  "generatedAt": "2026-10-06T10:09:33Z",
   "window": 10,
   "threshold": 2,
   "runs": [
@@ -28,6 +28,11 @@
       "runId": "37174398749",
       "sourceSha": "507f5d783c6ca2ee22c76c0eb92b44ff6055cc79",
       "recordedAt": "2026-10-04T04:09:12Z"
+    },
+    {
+      "runId": "37441592567",
+      "sourceSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "recordedAt": "2026-10-06T10:09:33Z"
     }
   ],
   "entries": {
@@ -40,6 +45,36 @@
       "title": "Lineage Interactions \u203a Edge Interaction \u203a Verify edge delete button in drawer",
       "lastSeenSha": "170677437861064916f8ac34ceea410bb4ca8273",
       "hardFailure": false
+    },
+    "Ingestion :: Features/AutoPilot.spec.ts :: Airflow \u203a Create Service and check the AutoPilot status": {
+      "observations": [
+        "37441592567"
+      ],
+      "project": "Ingestion",
+      "file": "Features/AutoPilot.spec.ts",
+      "title": "Airflow \u203a Create Service and check the AutoPilot status",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "hardFailure": true
+    },
+    "Ingestion :: Features/AutoPilot.spec.ts :: Kafka \u203a Create Service and check the AutoPilot status": {
+      "observations": [
+        "37441592567"
+      ],
+      "project": "Ingestion",
+      "file": "Features/AutoPilot.spec.ts",
+      "title": "Kafka \u203a Create Service and check the AutoPilot status",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "hardFailure": true
+    },
+    "Ingestion :: Features/AutoPilot.spec.ts :: Metabase \u203a Create Service and check the AutoPilot status": {
+      "observations": [
+        "37441592567"
+      ],
+      "project": "Ingestion",
+      "file": "Features/AutoPilot.spec.ts",
+      "title": "Metabase \u203a Create Service and check the AutoPilot status",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "hardFailure": true
     },
     "chromium :: Features/AIMode/ProfileNotificationTab.spec.ts :: Destination should work properly": {
       "observations": [
@@ -69,6 +104,16 @@
       "file": "Features/ContextCenterArticles.spec.ts",
       "title": "Context Center Articles \u203a Draft Persistence \u203a description: switching articles does not bleed unsaved content into next article",
       "lastSeenSha": "3bded8388307ee861eda07353ec99d121a085c13",
+      "hardFailure": false
+    },
+    "chromium :: Features/ContextCenterArticles.spec.ts :: Context Center Articles \u203a Related assets, activity feed, user mentions, and article mentions work": {
+      "observations": [
+        "37441592567"
+      ],
+      "project": "chromium",
+      "file": "Features/ContextCenterArticles.spec.ts",
+      "title": "Context Center Articles \u203a Related assets, activity feed, user mentions, and article mentions work",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
       "hardFailure": false
     },
     "chromium :: Pages/DomainAdvanced.spec.ts :: Domain Description Editing \u203a Admin can edit domain description": {
@@ -109,6 +154,16 @@
       "file": "Pages/ServiceEntity.spec.ts",
       "title": "Delete Api Service",
       "lastSeenSha": "857ded977baaf4e0662f28fb32215027964c5a6d",
+      "hardFailure": false
+    },
+    "chromium :: Pages/Tag.spec.ts :: Tag Page with Data Steward Roles \u203a Edit Tag Description for Data Steward": {
+      "observations": [
+        "37441592567"
+      ],
+      "project": "chromium",
+      "file": "Pages/Tag.spec.ts",
+      "title": "Tag Page with Data Steward Roles \u203a Edit Tag Description for Data Steward",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
       "hardFailure": false
     }
   },
