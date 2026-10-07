@@ -387,9 +387,7 @@ export default defineConfig(async ({ mode }) => {
       'process.env.NODE_ENV': JSON.stringify(
         isProductionBundle ? 'production' : mode
       ),
-      'process.env.BRAND_NAME': JSON.stringify(
-        env.BRAND_NAME || 'OpenMetadata'
-      ),
+      'process.env.BRAND_NAME': JSON.stringify(env.BRAND_NAME || 'MetaContext'),
       global: 'globalThis',
     },
   };
