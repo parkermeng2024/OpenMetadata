@@ -315,9 +315,12 @@
     cursor: pointer;
 
     // Height-constrain the wordmark; width follows its own aspect (works for
-    // any brand logo) and is capped so a very wide mark can't overflow.
+    // any brand logo) and is capped so a very wide mark can't overflow. 20px
+    // keeps this header's brand identical to the classic sidebar's wordmark
+    // (logo.svg is ~8.55:1, so 20px tall renders ~171px wide — under the cap,
+    // so the mark shows at its natural aspect instead of being letterboxed).
     svg {
-      height: 24px;
+      height: 20px;
       width: auto;
       max-width: 100%;
     }
