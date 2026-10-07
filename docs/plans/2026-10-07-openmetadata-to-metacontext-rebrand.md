@@ -430,12 +430,13 @@ yarn test --testPathPattern '(BrandImage|SidebarBrand|NavBar|SignUpPage|Document
 #   Test Suites: 13 passed, 13 total / Tests: 132 passed, 132 total / Snapshots: 0
 ```
 
-**未落库的素材（待决策）**：品牌方另给了两张 4000×468 的成品图
+**未落库的素材（已决策）**：品牌方另给了两张 4000×468 的成品图
 `metaContext-logo-final-white.png`（白底）与 `metaContext-logo-final-transparent.png`（透明底）。
 仓库现有的 5 个 logo 位（`logo.svg`、`logo-monogram.svg`、`favicon.png`、`logo192.png`、`favicons/*`）
-都是"标记/方图"用途，没有横向成品图的位置（`logo192.png` 甚至未被任何代码引用），
-故这两张图**暂未纳入**。若要使用，可选：① 作为站点 `og:image`（`index.html` 现无 og:image）；
-② 放进 `docs/` 作为文档头图；③ 作为 README 顶部横幅。请指定其一。
+都是"标记/方图"用途，没有横向成品图的位置（`logo192.png` 甚至未被任何代码引用）。
+**决策（2026-10-07）：本次不纳入**，保持改动仅替换既有 logo 位；素材留在工作区外。
+若后续要用，可选：① 作为站点 `og:image`（`index.html` 现无 og:image，社交分享卡片为空白）；
+② 放进 `docs/` 作为文档头图；③ 作为 README 顶部横幅。
 
 **已知视觉风险**：最终 mark 为深藏青 `#1d1d4a` + 亮蓝 `#496ce0` 双色。深色主题下藏青那半会与背景贴近
 （折叠态 mark、favicon 在深色浏览器标签栏同理）。现有实现未做深浅主题双版本，如需可加一份浅色变体
