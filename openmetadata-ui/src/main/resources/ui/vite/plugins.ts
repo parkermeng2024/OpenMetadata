@@ -10,6 +10,8 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
+import { createHash } from 'crypto';
+import { readFileSync } from 'fs';
 import path from 'path';
 import type { Plugin } from 'vite';
 
@@ -114,24 +116,93 @@ export const noEnumOnlyChunks = (): Plugin => ({
   },
 });
 
-export const htmlBasePathTransform = (): Plugin => ({
-  name: 'html-transform',
-  transformIndexHtml(html: string) {
-    // Don't replace ${basePath} placeholder - it will be replaced at runtime by Java backend
-    // Add ${basePath} prefix to asset paths (with or without leading slash)
-    return html
-      .replaceAll(
-        /(<script[^>]*src=["'])(\.\/)?assets\//g,
-        '$1${basePath}assets/'
-      )
-      .replaceAll(
-        /(<link[^>]*href=["'])(\.\/)?assets\//g,
-        '$1${basePath}assets/'
-      )
-      .replaceAll(/(<img[^>]*src=["'])(\.\/)?assets\//g, '$1${basePath}assets/')
-      .replaceAll(
-        /(<img[^>]*src=["'])(\.\/)?images\//g,
-        '$1${basePath}images/'
+/** `${basePath}`-prefixed brand icons whose URL carries a content hash. */
+const ICON_URL_PATTERN =
+  /\$\{basePath\}(favicon\.png|favicons\/[\w.-]+\.png)(?!\?v=)/g;
+
+/** sha256 of a `public/` icon, first 8 hex chars; `''` when the file is absent. */
+const iconVersion = (iconPath: string): string => {
+  try {
+    return createHash('sha256')
+      .update(readFileSync(path.join(UI_ROOT, 'public', iconPath)))
+      .digest('hex')
+      .slice(0, 8);
+  } catch {
+    return '';
+  }
+};
+
+/**
+ * Vite plugin: normalise `index.html` for both the dev server and the packaged
+ * build.
+ *
+ * - Prefixes bundled `assets/` and `images/` URLs with `${basePath}` — the Java
+ *   backend substitutes that placeholder at runtime with the deployment's base
+ *   path.
+ * - Appends a content hash to the brand icon URLs so a replaced icon cannot be
+ *   masked by the browser's favicon cache, which survives ordinary reloads.
+ * - Publishes that versioned default as `<meta name="brand-favicon">`, because
+ *   `AppRoot` re-points every icon link at runtime and would otherwise undo it.
+ * - Only the dev server resolves `${basePath}` to `/`: nothing sits in front of
+ *   it to do the substitution, so the browser would otherwise request
+ *   `${basePath}favicon.png` verbatim and end up with no icon at all.
+ */
+export const htmlBasePathTransform = (): Plugin => {
+  let isDevServer = false;
+
+  return {
+    name: 'html-transform',
+    configResolved(config) {
+      isDevServer = config.command === 'serve';
+    },
+    transformIndexHtml(html: string) {
+      const versionedIcons = html.replaceAll(
+        ICON_URL_PATTERN,
+        (match, iconPath: string) => {
+          const version = iconVersion(iconPath);
+
+          return version ? `${match}?v=${version}` : match;
+        }
       );
-  },
-});
+
+      // The app re-points every icon link at runtime (AppRoot), so the default it
+      // falls back to has to carry the hash too — otherwise it overwrites the
+      // versioned hrefs above with a URL the favicon cache answers from disk.
+      const faviconVersion = iconVersion('favicon.png');
+      const brandFaviconMeta = `<meta name="brand-favicon" content="\${basePath}favicon.png?v=${faviconVersion}" />`;
+      const withFaviconDefault = !faviconVersion
+        ? versionedIcons
+        : versionedIcons.includes('name="brand-favicon"')
+        ? versionedIcons.replace(
+            /<meta name="brand-favicon"[^>]*>/,
+            brandFaviconMeta
+          )
+        : versionedIcons.replace(
+            '</head>',
+            `    ${brandFaviconMeta}\n  </head>`
+          );
+
+      const withBasePath = withFaviconDefault
+        .replaceAll(
+          /(<script[^>]*src=["'])(\.\/)?assets\//g,
+          '$1${basePath}assets/'
+        )
+        .replaceAll(
+          /(<link[^>]*href=["'])(\.\/)?assets\//g,
+          '$1${basePath}assets/'
+        )
+        .replaceAll(
+          /(<img[^>]*src=["'])(\.\/)?assets\//g,
+          '$1${basePath}assets/'
+        )
+        .replaceAll(
+          /(<img[^>]*src=["'])(\.\/)?images\//g,
+          '$1${basePath}images/'
+        );
+
+      return isDevServer
+        ? withBasePath.replaceAll('${basePath}', '/')
+        : withBasePath;
+    },
+  };
+};

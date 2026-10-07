@@ -12,7 +12,6 @@
  */
 
 import { ToastProvider } from '@openmetadata/ui-core-components';
-import { isEmpty } from 'lodash';
 import { FC, useEffect } from 'react';
 import { HelmetProvider } from 'react-helmet-async';
 import { I18nextProvider } from 'react-i18next';
@@ -27,6 +26,7 @@ import {
   getCustomUiThemePreference,
   getSystemConfig,
 } from './rest/settingConfigAPI';
+import { applyFaviconHref } from './utils/FaviconUtils';
 import { getBasePath } from './utils/HistoryUtils';
 import i18n from './utils/i18next/LocalUtil';
 import { isPlaywrightEnv } from './utils/PlaywrightUtils';
@@ -69,19 +69,7 @@ const AppRoot: FC = () => {
   }, []);
 
   useEffect(() => {
-    const faviconHref = isEmpty(
-      applicationConfig?.customLogoConfig?.customFaviconUrlPath
-    )
-      ? '/favicon.png'
-      : applicationConfig?.customLogoConfig?.customFaviconUrlPath ??
-        '/favicon.png';
-    const link = document.querySelectorAll('link[rel~="icon"]');
-
-    if (!isEmpty(link)) {
-      link.forEach((item) => {
-        item.setAttribute('href', faviconHref);
-      });
-    }
+    applyFaviconHref(applicationConfig?.customLogoConfig?.customFaviconUrlPath);
   }, [applicationConfig]);
 
   return (

@@ -503,3 +503,62 @@ yarn test --testPathPattern '(BrandClassBase|SidebarBrand|NavBar|TourEndModal|Br
 **顺带发现（环境，非仓库问题）**：本机 `localhost:3000` 被 `genbi-wren-ui-1` 容器占用 IPv4，vite 只占 IPv6，
 导致浏览器把部分请求（含 `/api/v1/...` 启动鉴权）打到那个容器、返回 404，页面永久停在 full-screen loader。
 用 `http://[::1]:3000` 可绕开；彻底解决需停掉该容器或给 UI 换端口。
+
+### 14.9 追加：修复"换了 favicon 但浏览器标签图标不变"（2026-10-07 后续）
+
+**现象**：品牌资产替换完成后，浏览器 tab 上仍显示旧图标。
+
+**定位（像素级，非猜测）**：从截图裁出 32×32 的 tab 图标，与各候选比对——你的 tab 图标主色 `#8d6bf1` 紫 +
+白，与**改版前的 OpenMetadata 图标**（主色 `#8d6af1`）几乎一致，形状 IoU 0.618（最终版 0.432、genbi 图标 0.398）。
+即：文件和服务都没问题（磁盘与 server 返回字节一致 `27a4297f9fb1fe90`），**是浏览器用了缓存里的旧图标**。
+
+根因有两条，都必须修，缺一不可：
+
+**(1) dev 下声明的图标 URL 根本不可用。** `index.html` 写的是 `href="${basePath}favicon.png"`，而 `${basePath}`
+是**由 Java 后端在运行时替换**的占位符（`vite.config.ts` 的注释与 `vite/plugins.ts` 的 `htmlBasePathTransform`
+都明确说明这一点）——**Vite dev server 不替换**。实测 dev 下返回的 HTML 里 18 处 `${basePath}` 原样保留，
+于是浏览器实际请求 `/signin/${basePath}favicon.png` → Vite 的 SPA fallback 回 **HTML(200)** → Chrome 判定不是
+图片 → 回退 `/favicon.ico` → **404** → 全程拿不到图标，只能继续用缓存。
+
+**(2) 应用启动时把图标链接全部改写成硬编码的 `/favicon.png`。** `AppRoot.tsx` 里有一段：
+```tsx
+const faviconHref = isEmpty(customFaviconUrlPath) ? '/favicon.png' : ...;
+document.querySelectorAll('link[rel~="icon"]').forEach(i => i.setAttribute('href', faviconHref));
+```
+它把 HTML 里声明好的（已带版本号的）href 全部丢弃，换成浏览器"永远命中缓存"的那个 URL；顺带丢掉了 basePath
+（部署在子路径下会 404）。实验证据：**禁用 JS** 时 DOM 里 14 个图标链接全部带 `?v=`、0 个不带；**启用 JS**
+后同样的 14 个里 5 个被改写成不带版本的 `/favicon.png`。
+
+**修复**
+
+| 文件 | 改动 |
+|---|---|
+| `vite/plugins.ts`（`htmlBasePathTransform`） | ① 给每个品牌图标 URL 追加**内容哈希**（16 个链接，逐个文件 sha256 取前 8 位）；② 额外输出 `<meta name="brand-favicon" content="${basePath}favicon.png?v=<hash>">` 供应用读取；③ **仅 dev** 把 `${basePath}` 解析为 `/`（build 保留占位符给后端替换） |
+| `src/utils/FaviconUtils.ts`（新增） | `getFaviconHref` / `applyFaviconHref`：有自定义 favicon 用自定义，否则用 meta 里的版本化默认值，再否则退回 `getBasePath()/favicon.png` |
+| `src/AppRoot.tsx` | 改调 `applyFaviconHref`，不再硬编码不带版本的路径（子路径部署的 404 一并修掉） |
+
+**验证证据（14.9）**
+
+```bash
+# dev：HTML 里的图标链接带版本，且 18 处占位符全部解析
+curl -s http://[::1]:3000/signin | grep -oE 'href="/favicon[^"]*"' | head -2
+#   href="/favicon.png?v=27a4297f"      ← 27a4297f 即 public/favicon.png 的 sha256 前 8 位
+#   href="/favicons/apple-icon-57x57.png?v=101ee5ac"
+curl -s http://[::1]:3000/signin | grep -c 'basePath'      # 0
+
+# 浏览器（Chromium，JS 启用）：5 个 rel~="icon" 链接全部带版本，且都能取到新文件
+#   uniqueHrefs=['/favicon.png?v=27a4297f']  firstIcon={status:200, bytes:2750}  pageErrors=[]
+
+# 生产构建：占位符留给后端，版本号照旧
+#   <meta name="brand-favicon" content="${basePath}favicon.png?v=27a4297f" />
+#   href="${basePath}favicon.png?v=27a4297f"   ·  17 个带版本 URL  ·  ${basePath} 保留 30 处
+
+yarn test --testPathPattern '(vitePlugins|FaviconUtils)'   # 15 passed
+```
+
+**为什么必须用版本号**：浏览器把 favicon 存在独立缓存里，**普通刷新甚至硬刷新都不一定会重新拉取**；只有当 URL
+变化时才会重新请求。所以"换了文件"不足以让 tab 更新，必须让 URL 跟着变。
+
+**顺带发现（未处理，属本机环境）**：`localhost:3000` 的 IPv4 被 `genbi-wren-ui-1` 容器占用，其 `/favicon.ico`
+返回 200（是那个应用自己的图标）——图标请求一旦落到 IPv4，浏览器甚至可能缓存到别的应用的图标。用
+`http://[::1]:3000` 或停掉该容器可避免。
