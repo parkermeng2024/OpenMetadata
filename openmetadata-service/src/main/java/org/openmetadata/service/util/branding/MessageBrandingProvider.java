@@ -23,7 +23,7 @@ package org.openmetadata.service.util.branding;
  */
 public interface MessageBrandingProvider {
 
-  /** Display name of the product, e.g. "OpenMetadata" or "Collate". */
+  /** Display name of the product, e.g. "MetaContext" or "Collate". */
   String getProductName();
 
   /** Stable CDN URL for the square logo used as a thumbnail in chat messages. */

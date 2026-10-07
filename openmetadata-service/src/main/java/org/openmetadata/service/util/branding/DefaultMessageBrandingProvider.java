@@ -14,7 +14,7 @@
 package org.openmetadata.service.util.branding;
 
 /**
- * Default MessageBrandingProvider returning OpenMetadata branding values.
+ * Default MessageBrandingProvider returning MetaContext branding values.
  * Commercial distributions override this by registering a higher-priority provider
  * via META-INF/services.
  */
@@ -22,11 +22,13 @@ public class DefaultMessageBrandingProvider implements MessageBrandingProvider {
 
   @Override
   public String getProductName() {
-    return "OpenMetadata";
+    return "MetaContext";
   }
 
   @Override
   public String getLogoUrl() {
+    // TODO(rebrand): point at the MetaContext logo CDN once published — see
+    // docs/plans/2026-10-07-openmetadata-to-metacontext-rebrand.md (group 1).
     return "https://cdn.getcollate.io/omd_logo192.png";
   }
 

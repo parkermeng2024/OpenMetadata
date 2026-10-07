@@ -1,5 +1,5 @@
 email:
-  emailingEntity: ${OM_EMAIL_ENTITY:-"OpenMetadata"}
+  emailingEntity: ${OM_EMAIL_ENTITY:-"MetaContext"}
   supportUrl: ${OM_SUPPORT_URL:-"https://slack.open-metadata.org"}
   enableSmtpServer : ${AUTHORIZER_ENABLE_SMTP:-false}
   senderMail: ${OPENMETADATA_SMTP_SENDER_MAIL:-"sender@gmail.com"}

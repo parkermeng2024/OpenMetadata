@@ -215,12 +215,12 @@ import org.quartz.SchedulerException;
 @OpenAPIDefinition(
     info =
         @Info(
-            title = "OpenMetadata APIs",
+            title = "MetaContext APIs",
             version = "2.0.0-SNAPSHOT",
-            description = "Common types and API definition for OpenMetadata",
+            description = "Common types and API definition for MetaContext",
             contact =
                 @Contact(
-                    name = "OpenMetadata",
+                    name = "MetaContext",
                     url = "https://open-metadata.org",
                     email = "openmetadata-dev@googlegroups.com"),
             license =
