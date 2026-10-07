@@ -1303,11 +1303,11 @@
           <contextId>default</contextId>
           <openAPI>
             <info>
-              <title>OpenMetadata APIs</title>
+              <title>MetaContext APIs</title>
               <version>${project.version}</version>
-              <description>Common types and API definition for OpenMetadata</description>
+              <description>Common types and API definition for MetaContext</description>
               <contact>
-                <name>OpenMetadata</name>
+                <name>MetaContext</name>
                 <url>https://open-metadata.org</url>
                 <email>openmetadata-dev@googlegroups.com</email>
               </contact>

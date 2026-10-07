@@ -382,7 +382,7 @@ database:
     reWriteBatchedInserts: ${DB_PG_REWRITE_BATCHED_INSERTS:-true}  # Critical for batch performance
     defaultRowFetchSize: ${DB_PG_DEFAULT_ROW_FETCH_SIZE:-1000}  # Fetch more rows at once
     assumeMinServerVersion: ${DB_PG_ASSUME_MIN_SERVER_VERSION:-12}  # Skip version checks
-    ApplicationName: ${DB_PG_APPLICATION_NAME:-OpenMetadata}
+    ApplicationName: ${DB_PG_APPLICATION_NAME:-MetaContext}
     loginTimeout: ${DB_PG_LOGIN_TIMEOUT:-30}  # Login timeout in seconds
     postgresqlConnectTimeout: ${DB_POSTGRESQL_CONNECT_TIMEOUT:-30}  # Connection timeout in seconds
     postgresqlSocketTimeout: ${DB_POSTGRESQL_SOCKET_TIMEOUT:-300}  # Socket timeout in seconds

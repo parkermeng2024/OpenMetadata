@@ -387,7 +387,7 @@ public class HikariCPDataSourceFactory extends DataSourceFactory {
     // with their own pool config.
     props.putIfAbsent("socketTimeout", "300");
     props.putIfAbsent("tcpKeepAlive", "true");
-    props.putIfAbsent("ApplicationName", "OpenMetadata");
+    props.putIfAbsent("ApplicationName", "MetaContext");
 
     // Aurora-specific optimizations
     props.putIfAbsent("loadBalanceHosts", "false");

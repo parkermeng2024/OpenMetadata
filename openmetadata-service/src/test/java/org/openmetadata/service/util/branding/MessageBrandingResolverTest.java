@@ -14,7 +14,7 @@ class MessageBrandingResolverTest {
 
   @Test
   void testDefaultProductName() {
-    assertEquals("OpenMetadata", MessageBrandingResolver.get().getProductName());
+    assertEquals("MetaContext", MessageBrandingResolver.get().getProductName());
   }
 
   @Test

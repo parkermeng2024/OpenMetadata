@@ -1,6 +1,6 @@
 openapi: 3.0.3
 info:
-  title: OpenMetadata APIs
+  title: MetaContext APIs
   version: 1.6.0
 servers:
   - url: "/api"

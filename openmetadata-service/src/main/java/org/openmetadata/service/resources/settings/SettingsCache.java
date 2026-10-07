@@ -630,7 +630,7 @@ public class SettingsCache {
   private static SmtpSettings getDefaultSmtpSettings() {
     return new SmtpSettings()
         .withPassword(StringUtils.EMPTY)
-        .withEmailingEntity("OpenMetadata")
+        .withEmailingEntity("MetaContext")
         .withSupportUrl("https://slack.open-metadata.org")
         .withEnableSmtpServer(Boolean.FALSE)
         .withTransportationStrategy(SmtpSettings.TransportationStrategy.SMTP_TLS)
