@@ -529,7 +529,7 @@ const buildSectionDocDetails = (
     eyebrow: t(sectionCopy.eyebrow),
     title: t(sectionCopy.title),
     description: t(sectionCopy.description, {
-      brandName: process.env.BRAND_NAME ?? 'OpenMetadata',
+      brandName: process.env.BRAND_NAME ?? 'MetaContext',
     }),
     markdown: section === 'identity' ? '' : activeFieldMarkdown,
     showRequirements: section === 'connection',
@@ -691,7 +691,7 @@ const ServiceDocPanel: FC<ServiceDocPanelProp> = ({
     setMarkdownContent(
       response.replaceAll(
         'OpenMetadata',
-        process.env.BRAND_NAME ?? 'OpenMetadata'
+        process.env.BRAND_NAME ?? 'MetaContext'
       )
     );
     setIsLoading(false);

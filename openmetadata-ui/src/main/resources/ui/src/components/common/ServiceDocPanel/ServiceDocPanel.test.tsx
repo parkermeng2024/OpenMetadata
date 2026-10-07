@@ -1053,7 +1053,7 @@ describe('ServiceDocPanel Component', () => {
       });
     });
 
-    it('should keep OpenMetadata when BRAND_NAME env var is not set', async () => {
+    it('should fall back to the default brand when BRAND_NAME env var is not set', async () => {
       process.env = { ...originalEnv };
       delete process.env.BRAND_NAME;
       mockFetchMarkdownFile.mockResolvedValue(
@@ -1064,7 +1064,7 @@ describe('ServiceDocPanel Component', () => {
 
       await waitFor(() => {
         expect(mockProcessDocMarkdown).toHaveBeenCalledWith(
-          'Connect to OpenMetadata using OpenMetadata SDK'
+          'Connect to MetaContext using MetaContext SDK'
         );
       });
     });
