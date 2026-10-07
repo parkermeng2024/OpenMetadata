@@ -68,6 +68,7 @@ export const CarouselLayout = ({
         <div
           className={classNames(LOGIN_SPLIT_LAYOUT_CLASSES, carouselClassName)}
           data-testid="signin-page">
+          <div className={LOGIN_FORM_PANEL_CLASSES}>{children}</div>
           <div
             className={classNames(
               LOGIN_VIDEO_PANEL_CLASSES,
@@ -83,7 +84,6 @@ export const CarouselLayout = ({
               </div>
             </div>
           </div>
-          <div className={LOGIN_FORM_PANEL_CLASSES}>{children}</div>
         </div>
       </>
     );
