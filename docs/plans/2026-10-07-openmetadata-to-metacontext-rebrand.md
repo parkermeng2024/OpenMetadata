@@ -285,6 +285,7 @@ ls openmetadata-ui/src/main/resources/ui/src/assets/svg/logo*.svg
 | ① 前端品牌注入 | `vite.config.ts` / `i18nextUtil.ts` / `ServiceDocPanel.tsx` 默认值改为 `MetaContext`；`index.html` 标题与 meta | ✅ |
 | ② 后端品牌 | `DefaultMessageBrandingProvider` 产品名；邮件 `emailingEntity`（`conf/operations.yaml` + 2 处 Java 默认值）；`testMail.json` 与变更通知信封文案；OpenAPI `@Info`；DB `ApplicationName` 默认值 | ✅ |
 | ③ 品牌资产 | 由工作区根目录的 `metaContext.svg`（品牌素材，尚未纳入版本控制）生成 `logo.svg`（mark+wordmark）、`logo-monogram.svg`、`public/favicon.png`、`public/logo192.png`、`public/favicons/*`（24 个） | ✅ |
+| ③′ 品牌资产（最终版） | 上述草稿素材由品牌方提供的最终母版替换（`metaContext-logo-final.svg`），同一批 28 个文件全部重生成，见 §14.7 | ✅ |
 | ④ 文案 | 20 个语言文件 × 4 条：`OpenMetadata` → `MetaContext`（共 80 处） | ✅ |
 
 **组 8（UI 服务文档 md）经核实无需改动**：`ServiceDocPanel.tsx:693` 在渲染时执行
@@ -372,3 +373,71 @@ mvn -o -pl openmetadata-service test -Dtest=SeedDataGateTest
 mvn -o -pl openmetadata-integration-tests verify -Dit.test=SeedDataPresenceIT -Dsurefire.skip=true
 #   Tests run: 1, Failures: 0, Errors: 0   BUILD SUCCESS
 ```
+
+### 14.7 追加：改用最终版品牌素材（2026-10-07 后续）
+
+批次 ③ 当时用的是工作区根目录的草稿 `metaContext.svg`；品牌方随后提供了最终母版
+（`metaContext-logo-final.svg`，`viewBox="0 0 3462.7 405.0"`，4 个顶层 `<g>`、共 27 条 `<path>`，
+配色 `#1d1d4a` + `#496ce0`）。同一批 28 个文件全部按最终母版重生成。
+
+**母版结构（决定了如何切分素材）**：主体由 4 个顶层分组组成，每组外层
+`translate(x,y) scale(0.159392|0.166667)` + 内层 `translate(0,6000|2039) scale(0.1,-0.1)`：
+
+| 分组 | 外层 transform | path 数 | 内容 |
+|---|---|---|---|
+| 1 | `translate(2,-300) scale(0.166667)` | 4 | mark 上半 |
+| 2 | `translate(2,-300) scale(0.166667)` | 12 | mark 下半 |
+| 3 | `translate(371,40) scale(0.159392)` | 4 | 字标 "Meta" |
+| 4 | `translate(1533.76,40) scale(0.159392)` | 7 | 字标 "Context" |
+
+即 **mark = 第 1、2 组（共 16 条 path）**，字标 = 第 3、4 组（共 11 条）。
+
+**落库结果**
+
+| 文件 | 内容 | viewBox |
+|---|---|---|
+| `src/assets/svg/logo.svg` | 母版原样（27 条 path，`d` 序列与母版逐条一致） | `0 0 3462.7 405.0` |
+| `src/assets/svg/logo-monogram.svg` | 仅 mark（母版第 1、2 组，16 条 path） | `41.3 44.3 297.5 317.4` |
+| `public/favicon.png`(64)、`public/logo192.png`(600)、`public/favicons/*`(24) | 由 mark 居中放入 400×400 画布（填充率 84%）后按原尺寸栅格化 | — |
+
+母版根节点自带的 `width="3463" height="405"` **已去掉**：仓库里原有的 `logo.svg` / `logo-monogram.svg`
+都只有 `viewBox`，尺寸一律交给 CSS；保留固有宽高会在无 CSS 约束的场景（如 React 组件形式）按 3463px 渲染。
+
+**布局安全性（已实测，非推断）**
+
+| 位置 | 容器 | 渲染结果 |
+|---|---|---|
+| AI 侧栏展开态字标 | `.ask-main-panel__logo-btn svg { height:24px; width:auto; max-width:100% }` | **205.19 × 24 px**，不溢出（8.6:1 的宽字标按高度约束、宽度跟随 viewBox 比例） |
+| AI 侧栏折叠态 mark | rail 32×32，`<Monogram height={28} width={23} />` | 盒子 23×28，实际着色 **23 × 24.54 px**——内联 SVG 有 `viewBox` 时默认 `preserveAspectRatio`，只会在盒内留白，**不会拉伸变形** |
+
+**验证证据（14.7）**
+
+```bash
+# 1) SVG 结构与素材保真：母版 27 条 path 的 d 属性序列与仓库 logo.svg 完全一致；
+#    logo-monogram.svg == 母版前 16 条。三份 SVG 均 XML well-formed。
+./env/bin/python  # xml.etree 解析 + d 属性逐条比对 → identical sequence: True
+
+# 2) 真实浏览器（Chromium）量测：字标 205.19x24、mark 23x24.54，均不溢出
+node  # playwright-core：panelOverflows=false / railOverflows=false
+
+# 3) PNG 解码后统计非透明像素：内容居中、四边留白对称、非空白
+#    favicon.png 64 -> bbox [6,5,57,58]  ink 38.3%
+#    logo192.png 600 -> bbox [63,48,536,551]  ink 32.9%
+#    ms-icon-310x310 -> bbox [33,24,276,285]  ink 33.3%
+
+# 4) 组件级回归（品牌相关 13 个 suite）
+yarn test --testPathPattern '(BrandImage|SidebarBrand|NavBar|SignUpPage|DocumentTitle|TourEndModal|ServiceDocPanel|LoginCarousel|ServiceIconUtils|UserProfileCard)'
+#   Test Suites: 13 passed, 13 total / Tests: 132 passed, 132 total / Snapshots: 0
+```
+
+**未落库的素材（待决策）**：品牌方另给了两张 4000×468 的成品图
+`metaContext-logo-final-white.png`（白底）与 `metaContext-logo-final-transparent.png`（透明底）。
+仓库现有的 5 个 logo 位（`logo.svg`、`logo-monogram.svg`、`favicon.png`、`logo192.png`、`favicons/*`）
+都是"标记/方图"用途，没有横向成品图的位置（`logo192.png` 甚至未被任何代码引用），
+故这两张图**暂未纳入**。若要使用，可选：① 作为站点 `og:image`（`index.html` 现无 og:image）；
+② 放进 `docs/` 作为文档头图；③ 作为 README 顶部横幅。请指定其一。
+
+**已知视觉风险**：最终 mark 为深藏青 `#1d1d4a` + 亮蓝 `#496ce0` 双色。深色主题下藏青那半会与背景贴近
+（折叠态 mark、favicon 在深色浏览器标签栏同理）。现有实现未做深浅主题双版本，如需可加一份浅色变体
+或在深色主题下改用单色 `currentColor`。
+
