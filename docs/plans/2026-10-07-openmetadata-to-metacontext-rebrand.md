@@ -273,3 +273,65 @@ rg -n -F 'OpenMetadata' openmetadata-ui/src/main/resources/ui/public/locales/en-
 git ls-files openmetadata-ui/src/main/resources/ui/public/favicons/
 ls openmetadata-ui/src/main/resources/ui/src/assets/svg/logo*.svg
 ```
+
+---
+
+## 14. 执行结果（2026-10-07）
+
+### 14.1 已完成
+
+| 批次 | 内容 | 状态 |
+|---|---|---|
+| ① 前端品牌注入 | `vite.config.ts` / `i18nextUtil.ts` / `ServiceDocPanel.tsx` 默认值改为 `MetaContext`；`index.html` 标题与 meta | ✅ |
+| ② 后端品牌 | `DefaultMessageBrandingProvider` 产品名；邮件 `emailingEntity`（`conf/operations.yaml` + 2 处 Java 默认值）；`testMail.json` 与变更通知信封文案；OpenAPI `@Info`；DB `ApplicationName` 默认值 | ✅ |
+| ③ 品牌资产 | 由仓库根目录的 `metaContext.svg` 生成 `logo.svg`（mark+wordmark）、`logo-monogram.svg`、`public/favicon.png`、`public/logo192.png`、`public/favicons/*`（24 个） | ✅ |
+| ④ 文案 | 20 个语言文件 × 4 条：`OpenMetadata` → `MetaContext`（共 80 处） | ✅ |
+
+**组 8（UI 服务文档 md）经核实无需改动**：`ServiceDocPanel.tsx:693` 在渲染时执行
+`markdownContent.replaceAll('OpenMetadata', process.env.BRAND_NAME ?? 'MetaContext')`，
+文档正文的品牌词在运行时被替换；而 `/OpenMetadata/` 目录名由服务类型 `serviceType='OpenMetadata'` 决定
+（见 `ServiceDocPanel.tsx:662`），属 §11 的数据契约，不在 P0。
+
+### 14.2 本次顺带修复的强耦合点（不改会坏）
+
+| 文件 | 原因 |
+|---|---|
+| `openmetadata-service/pom.xml`（swagger 插件 `<openAPI><info>`） | 与 `@Info` 注解描述同一个 OpenAPI 信息块，必须与注解一致 |
+| `openmetadata-service/src/main/resources/openapi.yml` | SwaggerBundle 运行时配置桩，其 `title` 即 API 文档页标题 |
+| `scripts/update_version.py:98` | 版本号更新正则硬编码 `title = "OpenMetadata APIs"`，不改则发布脚本静默失效 |
+| `MessageBrandingResolverTest.testDefaultProductName` | 断言默认产品名，随默认值同步 |
+| `ServiceDocPanel.test.tsx`「BRAND_NAME 未设置」用例 | 断言回退值，随默认值同步 |
+
+### 14.3 验证证据
+
+```bash
+mvn -pl openmetadata-service spotless:apply                      # exit 0，仅格式化
+mvn -pl openmetadata-service test -Dtest='MessageBrandingResolverTest,DefaultOperationalConfigProviderTest'
+                                                                 # Tests run: 15, Failures: 0, Errors: 0
+yarn test --testPathPattern 'ServiceDocPanel|BrandImage|NavBar|DocumentTitle|TourEndModal|LoginCarousel'
+                                                                 # 6 suites, 96 tests passed
+yarn i18n                                                        # 无额外 diff（i18n 同步门禁通过）
+yarn generate:app-docs                                           # 无 diff（app-docs 门禁通过）
+```
+
+浏览器实测（`:3000`，dev server 热更新后）：
+标签页 `登入 | MetaContext` / `我的数据 | MetaContext`、`<meta name="description">` = "MetaContext Application"、
+登录页品牌图 alt = "MetaContext Logo"（新 monogram，113×150 正常渲染）、
+`欢迎来到 MetaContext`、AI 侧栏 wordmark SVG 文本 = "MetaContext"（viewBox `5 66 181 86`，未裁切）。
+
+### 14.4 遗留（代码内已留 `TODO(rebrand)`）
+
+| 位置 | 待定项 |
+|---|---|
+| `DefaultMessageBrandingProvider.getLogoUrl()` | 聊天告警缩略图用的绝对 URL，需 MetaContext 自己的 CDN 地址 |
+| `BrandClassBase.getReleaseLink()` / `getBlogLink()` | "What's New" 弹窗指向的更新日志 / 博客地址 |
+| 邮件信封 / OpenAPI contact | `open-metadata.org`、`slack.open-metadata.org`、`openmetadata-dev@googlegroups.com`、YouTube 频道等外部链接——无法凭空构造，需产品决定换成自有地址还是保留上游 |
+| `src/assets/videos/omd.mp4` | 登录页视频画面内烘焙有品牌文字，必须重制（唯一无法自动化的资产） |
+
+### 14.5 明确不改（见 §11 与 B/C 类清单）
+
+Java 包名 `org.openmetadata`、Maven/npm/PyPI 坐标、57 个 `OPENMETADATA_*` 环境变量、`openmetadata.yaml`
+等配置文件名、`openmetadata_db` 等数据库标识、`docker.getcollate.io/openmetadata/*` 镜像、
+CRD group `openmetadata.org`、Schema `$id`、`MetadataServiceResource.OPENMETADATA_SERVICE` /
+`AbstractNativeApplication.SERVICE_NAME` / `ServiceType.constant.ts` 的 `OpenMetadata` 服务类型、
+`WebAnalyticsUtils.ts:61` 埋点 `app` 标识，以及全部 `Copyright … Collate` 版权头与 `LICENSE`/`NOTICE`。
