@@ -11,18 +11,36 @@
  *  limitations under the License.
  */
 import WelcomeScreenSrc from '../../assets/img/welcome-screen.png';
+import LogoDarkSrc, {
+  ReactComponent as LogoDark,
+} from '../../assets/svg/logo-dark.svg';
+import MonogramDarkSrc, {
+  ReactComponent as MonogramDark,
+} from '../../assets/svg/logo-monogram-dark.svg';
 import MonogramSrc, {
   ReactComponent as Monogram,
 } from '../../assets/svg/logo-monogram.svg';
 import LogoSrc, { ReactComponent as Logo } from '../../assets/svg/logo.svg';
+import type { Theme } from '../../context/UntitledUIThemeProvider/theme-provider.interface';
 
+/**
+ * Brand artwork ships in two inks: the default navy/blue pair for light
+ * surfaces, and a light/blue-accent pair for dark ones. Callers rendering on a
+ * theme-driven background pass the current theme; the `'light'` default keeps
+ * surfaces that are always light (login and auth cards, service icons) on the
+ * default ink.
+ */
 class BrandClassBase {
-  public getMonogram() {
-    return { src: MonogramSrc, svg: Monogram };
+  public getMonogram(theme: Theme = 'light') {
+    return theme === 'dark'
+      ? { src: MonogramDarkSrc, svg: MonogramDark }
+      : { src: MonogramSrc, svg: Monogram };
   }
 
-  public getLogo() {
-    return { src: LogoSrc, svg: Logo };
+  public getLogo(theme: Theme = 'light') {
+    return theme === 'dark'
+      ? { src: LogoDarkSrc, svg: LogoDark }
+      : { src: LogoSrc, svg: Logo };
   }
 
   /**
@@ -31,8 +49,8 @@ class BrandClassBase {
    * to show its sidebar-specific full logo without affecting the NavBar/login
    * brand from `getLogo()`.
    */
-  public getSidebarLogo() {
-    return this.getLogo();
+  public getSidebarLogo(theme: Theme = 'light') {
+    return this.getLogo(theme);
   }
 
   /**
@@ -40,8 +58,8 @@ class BrandClassBase {
    * Defaults to the standard monogram; overridable per build independently of
    * `getMonogram()`.
    */
-  public getSidebarMonogram() {
-    return this.getMonogram();
+  public getSidebarMonogram(theme: Theme = 'light') {
+    return this.getMonogram(theme);
   }
 
   public getReleaseLink(version: string) {

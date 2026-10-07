@@ -438,7 +438,68 @@ yarn test --testPathPattern '(BrandImage|SidebarBrand|NavBar|SignUpPage|Document
 若后续要用，可选：① 作为站点 `og:image`（`index.html` 现无 og:image，社交分享卡片为空白）；
 ② 放进 `docs/` 作为文档头图；③ 作为 README 顶部横幅。
 
-**已知视觉风险**：最终 mark 为深藏青 `#1d1d4a` + 亮蓝 `#496ce0` 双色。深色主题下藏青那半会与背景贴近
-（折叠态 mark、favicon 在深色浏览器标签栏同理）。现有实现未做深浅主题双版本，如需可加一份浅色变体
-或在深色主题下改用单色 `currentColor`。
+**已知视觉风险（已修复）**：最终 mark 为深藏青 `#1d1d4a` + 亮蓝 `#496ce0` 双色，深色主题下藏青那半几乎不可见。
+实测确认后已补深浅两套油墨与按主题切换，见 §14.8。
 
+
+### 14.8 追加：深色主题品牌油墨（2026-10-07 后续）
+
+§14.7 结尾标记的"深色主题风险"经实测确认成立，本次修复。
+
+**实测缺陷（深色模式下逐处量测对比度）**
+
+| 位置 | 形态 | 承载色 | 藏青 `#1d1d4a` | 蓝 `#496ce0` |
+|---|---|---|---|---|
+| AI 侧栏（展开字标 + 折叠 mark） | 内联 SVG | `rgb(34,38,47)` | **1.04 : 1** ❌ | 3.25 : 1 |
+| 登录页 | `<img>`（白卡片） | `rgb(255,255,255)` | 15.83 : 1 ✓ | 4.66 : 1 ✓ |
+
+即只有 AI 侧栏真的坏：1.04:1 等于与背景同亮度（WCAG 对图形要求 ≥3:1），藏青半部消失。登录页由白卡片承载，
+深浅主题下都正确，不动。
+
+**方案**：新增深色变体资产，由 `BrandClassBase` 按主题返回（可选参数 + 默认值，向后兼容）。
+
+| 文件 | 油墨 |
+|---|---|
+| `src/assets/svg/logo.svg` / `logo-monogram.svg` | 浅底用：`#1d1d4a` + `#496ce0`（未改） |
+| `src/assets/svg/logo-dark.svg` / `logo-monogram-dark.svg` | 深底用：`#ffffff` + `#84caff`（新增） |
+
+深色的蓝取 `#84caff`，与设计系统自身的深色品牌色一致（`--om-color-brand-300`，`tailwind.css` 里已有
+`.dark-mode` 把品牌文字翻到它）；实测对深色侧栏为白 15.08:1 / `#84caff` 8.53:1。
+
+API：`getLogo/getMonogram/getSidebarLogo/getSidebarMonogram(theme: Theme = 'light')` —— 默认值让现有调用点与
+下游覆写（Collate 子类）零改动；`ServiceIconUtils` 在模块顶层解析 `getMonogram()`，靠默认值保持可用。
+
+**接线范围（读代码后确定，非按直觉）**
+
+| 表面 | 处理 | 依据 |
+|---|---|---|
+| AI 侧栏 panel + rail | 传主题 | 背景主题驱动，实测 1.04:1 不可见 |
+| `TourEndModal` | 传主题 | 内联 SVG；AntD 弹窗背景用 `--om-color-bg-overlay-surface`，深色下为深色（`modal.less` 的注释亦确认"dark overlay surface"） |
+| 登录 / 注册 / 忘记密码 | **不传** | 不在 `ThemeProvider` 作用域内（`useTheme()` 无 Provider 会抛异常），且实测为白卡片、对比度 15.83:1 |
+| `NavBar` | **不传** | 读代码后发现其 `Logo` 是**浏览器通知图标**（`new Notification(..., { icon: Logo })`），由操作系统绘制而非应用主题 —— 跟随应用主题反而会在浅色系统通知上不可见。最初按"经典 NavBar 品牌图"接了主题，读代码后**已回退**，仅留一行注释说明 |
+| `ServiceIconUtils` | 不传 | 模块顶层常量，非组件，无主题上下文 |
+
+**验证证据（14.8）**
+
+```bash
+# 1) 资产：几何与浅色版逐条相同，仅油墨不同（避免深色版重画 mark）
+yarn test --testPathPattern BrandClassBase
+#   BrandClassBase.test.ts：27/16 条 path 的 d 序列相等、fill 集合正确、深色版无藏青
+
+# 2) 组件：主题是否真的传到侧栏资产
+yarn test --testPathPattern SidebarBrand         # 3 passed（此前该组件没有任何测试）
+yarn test --testPathPattern '(BrandClassBase|SidebarBrand|NavBar|TourEndModal|BrandImage|SignUpPage)'
+#   Test Suites: 8 passed / Tests: 57 passed / Snapshots: 0
+
+# 3) 真实浏览器（Chromium，经 localStorage 'ui-theme' 走应用自身主题状态，非手工改 class）
+#   dark  : html.dark-mode，panel 27 条 path fill=['#84caff','#ffffff']，rail 16 条 path 同油墨，rail 盒 23×28
+#   light : html 无 dark-mode，panel 27 条 path fill=['#1d1d4a','#496ce0']
+```
+
+**为什么侧栏资产切换只在浏览器里验证**：jest 的 `moduleNameMapper` 把**所有** `*.svg` 映射到同一个 mock，
+四个资产在测试里是同一个模块标识（`getLogo('light') === getLogo('dark')`），因此 ink 选择无法在 jsdom 断言——
+已在 `BrandClassBase.test.ts` 顶部注明，改由"调用点组件测试 + 资产文件断言 + 浏览器实测"三层覆盖。
+
+**顺带发现（环境，非仓库问题）**：本机 `localhost:3000` 被 `genbi-wren-ui-1` 容器占用 IPv4，vite 只占 IPv6，
+导致浏览器把部分请求（含 `/api/v1/...` 启动鉴权）打到那个容器、返回 404，页面永久停在 full-screen loader。
+用 `http://[::1]:3000` 可绕开；彻底解决需停掉该容器或给 UI 换端口。

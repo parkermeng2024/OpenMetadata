@@ -15,13 +15,15 @@ import Icon from '@ant-design/icons/lib/components/Icon';
 import { Typography } from '@openmetadata/ui-core-components';
 import { Button, Col, Modal, Row } from 'antd';
 import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../../context/UntitledUIThemeProvider/theme-provider';
 import brandClassBase from '../../../utils/BrandData/BrandClassBase';
 import { TourEndModalProps } from './TourEndModal.interface';
 
 const TourEndModal = ({ onSave, visible }: TourEndModalProps) => {
   const { t } = useTranslation();
+  const { theme } = useTheme();
 
-  const { svg } = brandClassBase.getMonogram();
+  const { svg } = brandClassBase.getMonogram(theme);
 
   return (
     <Modal

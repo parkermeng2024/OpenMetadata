@@ -11,6 +11,7 @@
  *  limitations under the License.
  */
 import { fireEvent, render, screen } from '@testing-library/react';
+import { ThemeProvider } from '../../../context/UntitledUIThemeProvider/theme-provider';
 import TourEndModal from './TourEndModal';
 
 const mockOnSave = jest.fn();
@@ -26,7 +27,7 @@ jest.mock('../../..//utils/BrandData/BrandClassBase', () => ({
 
 describe('TourEndModal', () => {
   it('should render necessary elements', () => {
-    render(<TourEndModal {...mockProps} />);
+    render(<TourEndModal {...mockProps} />, { wrapper: ThemeProvider });
 
     expect(screen.getByTestId('modal-container')).toBeInTheDocument();
 
@@ -39,7 +40,7 @@ describe('TourEndModal', () => {
   });
 
   it('should render with correct brandName keys', () => {
-    render(<TourEndModal {...mockProps} />);
+    render(<TourEndModal {...mockProps} />, { wrapper: ThemeProvider });
 
     const tourMessage = screen.getByTestId('tour-complete-message');
 
