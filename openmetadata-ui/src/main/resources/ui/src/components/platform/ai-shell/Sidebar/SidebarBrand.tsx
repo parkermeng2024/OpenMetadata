@@ -30,7 +30,7 @@ export interface SidebarBrandProps {
 /**
  * Brand chrome for the AI sidebar header. Uses `brandClassBase`, which a
  * downstream build overrides via the class-replacement plugin — so this shows
- * the OpenMetadata mark by default and the Collate mark in Collate, always (no
+ * the MetaContext mark by default and the Collate mark in Collate, always (no
  * plugin-install gate). The expanded panel shows the full wordmark
  * (`getSidebarLogo()`); the collapsed 32px rail shows the compact monogram
  * (`getSidebarMonogram()`). These sidebar-specific getters let a build swap
