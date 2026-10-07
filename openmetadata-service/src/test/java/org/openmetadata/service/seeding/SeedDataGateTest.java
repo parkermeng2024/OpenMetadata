@@ -86,8 +86,7 @@ class SeedDataGateTest {
         seedRows
             .identities(SeedTable.NOTIFICATION_TEMPLATE)
             .contains("system-notification-entity-created"));
-    assertTrue(
-        seedRows.identities(SeedTable.LEARNING_RESOURCE).contains("CollateClues_GettingStarted"));
+    assertTrue(seedRows.identities(SeedTable.LEARNING_RESOURCE).contains("Demo_GettingStarted"));
     assertTrue(seedRows.identities(SeedTable.TEST_DEFINITION).contains("tableRowCountToEqual"));
     assertTrue(
         seedRows

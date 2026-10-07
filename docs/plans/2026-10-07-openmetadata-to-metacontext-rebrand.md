@@ -335,3 +335,40 @@ Java 包名 `org.openmetadata`、Maven/npm/PyPI 坐标、57 个 `OPENMETADATA_*`
 CRD group `openmetadata.org`、Schema `$id`、`MetadataServiceResource.OPENMETADATA_SERVICE` /
 `AbstractNativeApplication.SERVICE_NAME` / `ServiceType.constant.ts` 的 `OpenMetadata` 服务类型、
 `WebAnalyticsUtils.ts:61` 埋点 `app` 标识，以及全部 `Copyright … Collate` 版权头与 `LICENSE`/`NOTICE`。
+
+### 14.6 追加：YouTube 外链清理（2026-10-07 后续）
+
+清掉了两类 YouTube 外链：
+
+| 位置 | 处理 |
+|---|---|
+| `json/data/document/emailTemplates/openmetadata/dataInsightReport.json` | 删除邮件页脚 3 个社交图标中的 YouTube 单元格（`youtube.com/c/OpenMetadataChannel`），并归一化被破坏的缩进；JSON 已校验 |
+| `json/data/learningResource/` | 删除 **14 个** `source.url` 指向 `youtube.com` 的种子资源（12 个 `CollateClues_*` + `Video_BigQueryIntegration` + `Video_SnowflakeIntegration`） |
+
+**保留未动**：同目录下 **12 个** 非 YouTube 资源（`DataProducts_Storylane`、`Demo_*`、`Profiling`、`UserManagement`、
+`WorkingWithRolesAndPolicies`、`UsingTheWorkflowBuilder`、`CustomMetricsAndAlerts`、
+`DataGovernanceBasics_Automations`），它们的 `source.url` 指向 `collate.storylane.io`——同样指向上一家厂商，
+但不属于"YouTube"。去掉它们会让种子目录为空（git 无法跟踪空目录，且会影响 `SeedDataGate` 的分类扫描），
+如需清理应改为保留一个占位资源或调整加载逻辑，请单独决策。
+
+**同步修复的测试耦合**（这两个测试原本要求 `CollateClues_GettingStarted` 存在，删除后会失败）：
+
+| 文件 | 改动 |
+|---|---|
+| `openmetadata-service/src/test/java/org/openmetadata/service/seeding/SeedDataGateTest.java` | 断言的种子身份改为仍然存在的 `Demo_GettingStarted` |
+| `openmetadata-integration-tests/src/test/java/org/openmetadata/it/tests/SeedDataPresenceIT.java` | 同上 |
+
+邮件页脚另外两个社交图标（`twitter.com/open_metadata`、`linkedin.com/company/collateinc`）**仍在**
+——它们同样指向旧厂牌账号，但不在"YouTube"范围内，未动。
+
+**验证证据（14.6）**
+
+```bash
+# 单元：SeedDataGate 扫描真实 classpath 种子（重建后为 12 个文件、0 处 youtube）
+mvn -o -pl openmetadata-service test -Dtest=SeedDataGateTest
+#   Tests run: 8, Failures: 0, Errors: 0
+
+# 集成：真实启动服务 + 数据库，断言种子行存在
+mvn -o -pl openmetadata-integration-tests verify -Dit.test=SeedDataPresenceIT -Dsurefire.skip=true
+#   Tests run: 1, Failures: 0, Errors: 0   BUILD SUCCESS
+```
