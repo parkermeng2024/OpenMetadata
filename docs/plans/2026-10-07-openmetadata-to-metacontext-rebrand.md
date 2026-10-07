@@ -1,0 +1,275 @@
+# OpenMetadata → MetaContext 品牌替换 · P0 改动清单（逐文件 + 精确行号）
+
+> 分支：`rebrand/openmetadata-to-metacontext` · 基线 `main` @ `288e0171f7`
+> 范围：**仅 P0 = 用户可见品牌，零兼容风险**。
+> 行号均为基线提交上的真实行号，可按文件定位。
+>
+> **状态**：本文件是审计结论 + 执行清单。
+> B 类（对外技术契约：Java 包名 / Maven 坐标 / 环境变量 / DB 名 / CRD group / Schema `$id` …）与
+> C 类（法律与上游引用：`Copyright … Collate`、`LICENSE`/`NOTICE`、`open-metadata.org`、
+> `github.com/open-metadata`）明确**不在 P0 范围**——前者改了会破坏已发布 API/配置兼容性，
+> 后者需法务确认。详见 §11 与 §12 的批次说明。
+
+## 0. 一个决定性的发现（先把工作量打下来）
+
+UI 里**已经存在完整的品牌注入机制**，不需要逐条改文案：
+
+```ts
+// vite.config.ts:390-392
+'process.env.BRAND_NAME': JSON.stringify(env.BRAND_NAME || 'OpenMetadata')
+
+// src/utils/i18next/i18nextUtil.ts:40
+defaultVariables: { brandName: process.env.BRAND_NAME ?? 'OpenMetadata' }
+
+// src/components/common/DocumentTitle/DocumentTitleProvider.tsx:44
+<title>{[...segments, t('label.brand-name')].join(' | ')}</title>
+```
+
+也就是说：**浏览器标签页后缀、注册页欢迎语、文档面板文案**等已经全部走 `{{brandName}}`，只要设 `BRAND_NAME=MetaContext` 并改 3 处默认值即可。i18n 里已有 6 个品牌占位键：
+
+`label.brand-name`(:358) · `label.brand-name-bot`(:359) · `label.brand-name-logo`(:360) · `label.brand-name-url`(:361) · `label.brand-updated`(:362) · `label.notification-from-brand-name`(:2127) — 均在 `src/locale/languages/en-us.json`
+
+**P0 总计 ≈ 76 个文件**，其中真正含代码逻辑的只有 **6 个**，其余是配置默认值、文案与二进制资产。
+
+---
+
+## 组 1｜后端品牌抽象层（改产品名 / Logo）
+
+| 文件 | 行号 | 现状 | 目标 |
+|---|---|---|---|
+| `openmetadata-service/src/main/java/org/openmetadata/service/util/branding/DefaultMessageBrandingProvider.java` | **17** | javadoc `returning OpenMetadata branding values` | MetaContext |
+| 同上 | **25** | `return "OpenMetadata";` | `"MetaContext"` |
+| 同上 | **30** | `return "https://cdn.getcollate.io/omd_logo192.png";` | 新 CDN/本地 Logo URL |
+| `…/branding/MessageBrandingProvider.java` | **26** | javadoc `e.g. "OpenMetadata" or "Collate"` | 可选，文档同步 |
+| `openmetadata-service/src/main/resources/META-INF/services/org.openmetadata.service.util.branding.MessageBrandingProvider` | **1** | `org.openmetadata.service.util.branding.DefaultMessageBrandingProvider` | 若新增 `MetaContextMessageBrandingProvider`，在此追加（其 `getPriority()` 需 > 0，见 `MessageBrandingResolver.java:38`） |
+
+**消费端（无需改，自动生效）**
+- `…/formatter/decorators/MessageDecorator.java:63`（连接测试消息）、`:68`（`getProductName()`）、`:72`（`getLogoUrl()`）
+- `…/apps/bundles/changeEvent/generic/GenericPublisher.java:52`（Webhook 测试消息）
+
+---
+
+## 组 2｜前端 `BRAND_NAME` 机制（改默认值 + 传构建变量）
+
+| 文件 | 行号 | 现状 | 目标 |
+|---|---|---|---|
+| `openmetadata-ui/src/main/resources/ui/vite.config.ts` | **40** | `const env = loadEnv(mode, process.cwd(), '')` | 无需改；确认 `BRAND_NAME` 从此处读取 |
+| 同上 | **390-392** | `env.BRAND_NAME \|\| 'OpenMetadata'` | `env.BRAND_NAME \|\| 'MetaContext'` |
+| `…/ui/src/utils/i18next/i18nextUtil.ts` | **40** | `brandName: process.env.BRAND_NAME ?? 'OpenMetadata'` | `?? 'MetaContext'` |
+| `…/ui/src/components/common/ServiceDocPanel/ServiceDocPanel.tsx` | **532** | `brandName: process.env.BRAND_NAME ?? 'OpenMetadata'` | `?? 'MetaContext'` |
+| 同上 | **693-694** | `replaceAll('OpenMetadata', process.env.BRAND_NAME ?? 'OpenMetadata')` | 兜底改为 `'MetaContext'` |
+
+**消费端（无需改）**：`DocumentTitleProvider.tsx:44`（标签页后缀）、`SignInPage.tsx:67`+`:254`（登录页 "Welcome to …"）、`BasicSignup.component.tsx:60`+`:200`（注册页）、`EmailConfigUtils.ts:18`（`openMetadataUrl → label.brand-name-url`）、`SettingsCache`/`TestDefinitionForm` 等 14 个测试用例已覆盖该行为。
+
+**⚠️ 交付链路缺口**：仓库内**不存在任何 `.env*` 文件**，`docker/` 与 `docker/development/Dockerfile` **均未传 `BRAND_NAME`**。要让构建产物真的叫 MetaContext，必须在 `.env`（或 CI/Docker build args）中提供 `BRAND_NAME=MetaContext`，否则第 390-392 行的新默认值才生效。
+
+---
+
+## 组 3｜静态页面元信息
+
+| 文件 | 行号 | 现状 |
+|---|---|---|
+| `…/ui/index.html` | **23** | `<meta name="description" content="OpenMetadata Application" />` |
+| 同上 | **24** | `<meta property="og:title" content="OpenMetadata" />` |
+| 同上 | **25** | `<meta property="og:description" content="OpenMetadata Application" />` |
+| 同上 | **168** | `<title>OpenMetadata</title>` |
+
+> `index.html` 里 favicon 的 `<link>` 引用（21/28/82/86-138 行）指向 `${basePath}favicons/*`，**只要文件名与路径不变，就无需改动**——替换资产文件即可。
+
+---
+
+## 组 4｜前端品牌类与品牌外链
+
+| 文件 | 行号 | 现状 | 目标 |
+|---|---|---|---|
+| `…/ui/src/utils/BrandData/BrandClassBase.ts` | **14-17** | import `logo-monogram.svg` / `logo.svg` | 指向新 Logo（或保持文件名、只换内容） |
+| 同上 | **20-22** | `getMonogram()` | 新 monogram |
+| 同上 | **24-26** | `getLogo()` | 新 wordmark |
+| 同上 | **34-36** | `getSidebarLogo()` | 默认回落 `getLogo()`，无需改 |
+| 同上 | **43-45** | `getSidebarMonogram()` | 默认回落 `getMonogram()`，无需改 |
+| 同上 | **47-51**（URL 在 **50**） | `https://open-metadata.org/product-updates#v…` | MetaContext 官网/更新日志地址 |
+| 同上 | **53-56**（URL 在 **55**） | `https://blog.open-metadata.org/announcing-openmetadata-1-13-…` | MetaContext 博客地址 |
+
+**消费端（无需改）**：`WhatsNewAlert.component.tsx:48-49`、`platform/ai-shell/Sidebar/SidebarBrand.tsx:42-43`、`MyData/WelcomeScreen/WelcomeScreen.component.tsx:42`
+
+---
+
+## 组 5｜邮件 / 通知品牌
+
+| 文件 | 行号 | 现状 | 说明 |
+|---|---|---|---|
+| `conf/operations.yaml` | **2** | `emailingEntity: ${OM_EMAIL_ENTITY:-"OpenMetadata"}` | 改默认值即可，**已有 `OM_EMAIL_ENTITY` 环境变量覆盖**（最省事的换法） |
+| `openmetadata-service/src/main/java/org/openmetadata/DefaultOperationalConfigProvider.java` | **39** | `.withEmailingEntity("OpenMetadata")` | 默认 SMTP 设置 |
+| `…/service/resources/settings/SettingsCache.java` | **633** | `.withEmailingEntity("OpenMetadata")` | 默认设置缓存 |
+| `…/resources/json/data/document/emailTemplates/openmetadata/testMail.json` | **8** | 模板内品牌文案 | 目录名 `openmetadata/` 也是品牌 |
+| `…/document/emailTemplates/openmetadata/dataInsightReport.json` | **8** | 模板内品牌文案 | |
+| `…/json/data/notifications/envelopes/system-email-change-event-notification-envelope.json` | **5, 8** | 通知信封品牌文案 | |
+
+**无需改**：`openmetadata-service/src/main/resources/json/data/notifications/templates/*`（不含品牌）
+
+---
+
+## 组 6｜OpenAPI / Swagger 元信息（开发者可见）
+
+| 文件 | 行号 | 现状 |
+|---|---|---|
+| `…/service/OpenMetadataApplication.java` | **218** | `title = "OpenMetadata APIs"` |
+| 同上 | **220** | `description = "Common types and API definition for OpenMetadata"` |
+| 同上 | **223** | `name = "OpenMetadata"`（contact） |
+| 同上 | **224** | `url = "https://open-metadata.org"` |
+| 同上 | **225** | `email = "openmetadata-dev@googlegroups.com"` |
+
+---
+
+## 组 7｜i18n 文案（20 语言 × 4 行 = 80 行）
+
+路径前缀：`…/ui/src/locale/languages/`
+
+| 语种 | 文件 | 行号（4 行固定相同） |
+|---|---|---|
+| 英 | `en-us.json` | **4010, 4011, 5123, 5362** |
+| 中简 | `zh-cn.json` | 同上 |
+| 中繁 | `zh-tw.json` | 同上 |
+| 日 | `ja-jp.json` | 同上 |
+| 韩 | `ko-kr.json` | 同上 |
+| 德 | `de-de.json` | 同上 |
+| 法 | `fr-fr.json` | 同上 |
+| 西 | `es-es.json` | 同上 |
+| 葡(巴) | `pt-br.json` | 同上 |
+| 葡(葡) | `pt-pt.json` | 同上 |
+| 荷 | `nl-nl.json` | 同上 |
+| 土 | `tr-tr.json` | 同上 |
+| 俄 | `ru-ru.json` | 同上 |
+| 泰 | `th-th.json` | 同上 |
+| 西语(加利西亚) | `gl-es.json` | 同上 |
+| 希伯来 | `he-he.json` | 同上 |
+| 阿拉伯 | `ar-sa.json` | 同上 |
+| 瑞典 | `sv-se.json` | 同上 |
+| 马拉地 | `mr-in.json` | 同上 |
+| 波斯 | `pr-pr.json` | 同上 |
+
+4 个 key 与语义：
+- `4010` `doc-field-test-definition-supported-data-types`（"For **OpenMetadata**-native tests…"）
+- `4011` `doc-field-test-definition-test-platforms`（"…e.g. **OpenMetadata**, dbt, Great Expectations"）
+- `5123` `sparql-playground-subtitle`（"…against the **OpenMetadata** knowledge graph…"）
+- `5362` `workflow-empty-description`（"…and **OpenMetadata** handles the rest."）
+
+> 两个额外动作：① 这 4 条建议改为使用 `{{brandName}}` 占位，从根上避免以后再改；② `zh-cn.json` / `zh-tw.json` 这 4 条目前是**英文原文未翻译**，顺手补齐中文。
+
+---
+
+## 组 8｜UI 服务文档（10 个文件，16 行；目录名本身是品牌）
+
+目录：`…/ui/public/locales/en-US/OpenMetadata/`（仅 `en-US` 有此目录，`fr-FR` / `sv-SE` 没有）
+
+| 文件 | 含品牌行号 |
+|---|---|
+| `TestDefinitionForm.md` | **26, 50, 68** |
+| `EmailConfiguration.md` | **3, 5, 53, 55** |
+| `OpenMetadataUrlConfiguration.md` | **1, 5, 7** |
+| `TestCaseForm.md` | **3, 99, 234** |
+| `CustomLoginConfiguration.md` | **9** |
+| `CustomLogoConfiguration.md` | **9** |
+| `CustomProperty.md` | **3** |
+| `LineageConfiguration.md` | — |
+| `MetricEntity.md` | — |
+| `ObservabilityAlertForm.md` | — |
+
+> 目录名 `OpenMetadata/` 的改名需同步 `src/constants/service-guide.constant.ts:153`（`'OpenMetadataUrlConfiguration'` 等条目）与该目录的 `$(id=...)` 引用。
+
+---
+
+## 组 9｜品牌资产（31 个文件，仅替换文件内容）
+
+**Logo（4 个 SVG）**
+| 文件 | 说明 |
+|---|---|
+| `…/ui/src/assets/svg/logo.svg` | wordmark，viewBox `0 0 157 64`，12.5KB，**纯 path 无 `<text>` → 必须重绘** |
+| `…/ui/src/assets/svg/logo-monogram.svg` | 1.7KB，同上 |
+| `…/ui/src/assets/svg/ic-custom-logo.svg` | 自定义 Logo 占位图标 |
+| `…/ui/src/assets/svg/ic-custom-dashboard-logo.svg` | 同上 |
+
+**站点图标（26 个 PNG）**
+- `…/ui/public/favicon.png`（64×64）
+- `…/ui/public/logo192.png`（600×600）
+- `…/ui/public/favicons/` 全部 **24 个**：`favicon-16x16`、`favicon-32x32`、`favicon-96x96`、`android-icon-{36,48,72,96,144,192}x*`、`apple-icon-{57,60,72,76,114,120,144,152,180}x*`、`apple-icon-precomposed`、`apple-icon`、`ms-icon-{70,144,150,310}x*`
+
+**视频（1 个）**
+- `…/ui/src/assets/videos/omd.mp4`（15.8MB，登录页背景视频；`OpenMetadata` 字样与英文营销文案**烘焙在画面内**，只能重制）
+
+**已核查"无需改动"的图片（OCR 验证）**
+| 文件 | 结论 |
+|---|---|
+| `src/assets/img/welcome-screen.png` | 541×408，**画面无可识别文字** → 无需替换 |
+| `src/assets/img/login-screen/data-collaboration.png` 等 4 张 | 产品截图，无品牌词；且 `LoginClassBase.getLoginCarouselContent()` **已无任何调用方**（登录页走视频分支，见 `CarouselLayout.tsx:62-88`）→ 实为死资产，可不动 |
+
+---
+
+## 组 10｜低优先级 / 内部标识（可并入 P0，也可延后）
+
+| 文件 | 行号 | 现状 | 性质 |
+|---|---|---|---|
+| `…/ui/src/utils/WebAnalyticsUtils.ts` | **61** | `app: 'OpenMetadata'` | 前端埋点 app 名（分析后台可见） |
+| `…/service/jdbi3/HikariCPDataSourceFactory.java` | **390** | `props.putIfAbsent("ApplicationName", "OpenMetadata")` | DB 连接应用名（DBA 可见） |
+| `…/service/apps/AbstractNativeApplication.java` | **68** | `private static final String SERVICE_NAME = "OpenMetadata"` | 内部应用名 |
+| `conf/openmetadata.yaml` | **373** | `ApplicationName: ${DB_PG_APPLICATION_NAME:-OpenMetadata}` | 已有环境变量覆盖 |
+| `conf/openmetadata-h2-test.yaml` | **385** | 同上 | 测试配置 |
+
+---
+
+## ⚠️ 组 11｜"用户可见，但属数据契约"——请勿放进 P0 自动改
+
+这些串在界面上确实显示为 `OpenMetadata`，但它们同时是**已落库的服务类型标识**，改名会破坏既有实例与 API：
+
+| 文件 | 行号 | 内容 |
+|---|---|---|
+| `…/service/resources/services/metadata/MetadataServiceResource.java` | **79** | `public static final String OPENMETADATA_SERVICE = "OpenMetadata";` |
+| `…/service/src/main/resources/json/data/metadataService/OpenmetadataService.json` | **2, 3, 4, 5** | `"name"` / `"displayName"` / `"description"` / `"serviceType"` |
+| `…/ui/src/constants/ServiceType.constant.ts` | **32** | `export const OPEN_METADATA = 'OpenMetadata';` |
+| `…/ui/src/constants/service-guide.constant.ts` | **155** | 同上 |
+| `…/ui/src/utils/EntityUtils.interface.ts` | **41** | `OpenMetadata = 'OpenMetadata'` |
+
+> 若确实要改，必须走"新增 + 迁移 + 别名兼容"，不能只改常量。
+
+---
+
+## 12. 建议的提交批次（4 个 commit）
+
+| 批次 | 内容 | 文件数 | 独立验证方式 |
+|---|---|---|---|
+| ① 前端品牌注入 | 组 2（3 处默认值）+ 组 3（index.html） | 4 | `yarn test src/components/common/DocumentTitle` + 浏览器标题/注册页文案 |
+| ② 后端品牌 | 组 1 + 组 5 + 组 6 | 9 | `mvn -pl openmetadata-service test -Dtest='MessageBranding*'`；重启后看 Webhook/告警测试消息与邮件 |
+| ③ 资产替换 | 组 9 | 31 | 目视：登录页 Logo、导航栏、favicon、登录视频 |
+| ④ 文案与文档 | 组 7 + 组 8 | 30 | `yarn i18n`（i18n 同步校验）+ `yarn lint` |
+
+**总计：76 个文件 / 其中 6 个含逻辑代码。**
+
+> 提醒：`.github/workflows/**` 属供应链面，本仓库规则要求**显式授权**才能改动——本清单未包含任何 workflow 改动。
+
+---
+
+## 13. 复核用命令（可复现本清单）
+
+```bash
+# 组1-2：品牌注入点
+rg -n "BRAND_NAME" openmetadata-ui/src/main/resources/ui/vite.config.ts \
+  openmetadata-ui/src/main/resources/ui/src/utils/i18next/i18nextUtil.ts \
+  openmetadata-ui/src/main/resources/ui/src/components/common/ServiceDocPanel/ServiceDocPanel.tsx
+
+# 组1：后端
+rg -n '"OpenMetadata"' openmetadata-service/src/main/java/org/openmetadata/service/util/branding/
+
+# 组5：邮件
+rg -n 'withEmailingEntity' openmetadata-service/src/main
+rg -n -F 'OpenMetadata' openmetadata-service/src/main/resources/json/data/document/emailTemplates/
+
+# 组7：i18n
+rg -n -F 'OpenMetadata' openmetadata-ui/src/main/resources/ui/src/locale/languages/*.json | cut -d: -f1,2
+
+# 组8：服务文档
+rg -n -F 'OpenMetadata' openmetadata-ui/src/main/resources/ui/public/locales/en-US/OpenMetadata/
+
+# 组9：资产
+git ls-files openmetadata-ui/src/main/resources/ui/public/favicons/
+ls openmetadata-ui/src/main/resources/ui/src/assets/svg/logo*.svg
+```
