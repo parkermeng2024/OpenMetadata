@@ -61,7 +61,7 @@ class SeedDataPresenceIT {
     rows.put(SeedTable.WORKFLOW_DEFINITION, List.of("AIAssetApprovalWorkflow"));
     rows.put(SeedTable.EVENT_SUBSCRIPTION, List.of("ActivityFeedAlert"));
     rows.put(SeedTable.NOTIFICATION_TEMPLATE, List.of("system-notification-entity-created"));
-    rows.put(SeedTable.LEARNING_RESOURCE, List.of("CollateClues_GettingStarted"));
+    rows.put(SeedTable.LEARNING_RESOURCE, List.of("Demo_GettingStarted"));
     rows.put(SeedTable.TEST_DEFINITION, List.of("tableRowCountToEqual"));
     rows.put(SeedTable.TEST_CONNECTION_DEFINITION, List.of("Rest.testConnectionDefinition"));
     rows.put(SeedTable.WEB_ANALYTIC_EVENT, List.of("CustomEvent"));
