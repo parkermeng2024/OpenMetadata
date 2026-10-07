@@ -47,11 +47,15 @@ class BrandClassBase {
   public getReleaseLink(version: string) {
     const versionWithV = 'v' + version;
 
+    // TODO(rebrand): switch to the MetaContext product-updates URL — see
+    // docs/plans/2026-10-07-openmetadata-to-metacontext-rebrand.md (group 4).
     return `https://open-metadata.org/product-updates#${versionWithV}`;
   }
 
   public getBlogLink(_version: string) {
     // Since medium doens't follow any fixed structure we will just return the blog link
+    // TODO(rebrand): switch to the MetaContext blog URL — see
+    // docs/plans/2026-10-07-openmetadata-to-metacontext-rebrand.md (group 4).
     return 'https://blog.open-metadata.org/announcing-openmetadata-1-13-123d66609468';
   }
 

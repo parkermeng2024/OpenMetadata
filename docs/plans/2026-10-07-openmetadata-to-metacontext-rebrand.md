@@ -284,7 +284,7 @@ ls openmetadata-ui/src/main/resources/ui/src/assets/svg/logo*.svg
 |---|---|---|
 | ① 前端品牌注入 | `vite.config.ts` / `i18nextUtil.ts` / `ServiceDocPanel.tsx` 默认值改为 `MetaContext`；`index.html` 标题与 meta | ✅ |
 | ② 后端品牌 | `DefaultMessageBrandingProvider` 产品名；邮件 `emailingEntity`（`conf/operations.yaml` + 2 处 Java 默认值）；`testMail.json` 与变更通知信封文案；OpenAPI `@Info`；DB `ApplicationName` 默认值 | ✅ |
-| ③ 品牌资产 | 由仓库根目录的 `metaContext.svg` 生成 `logo.svg`（mark+wordmark）、`logo-monogram.svg`、`public/favicon.png`、`public/logo192.png`、`public/favicons/*`（24 个） | ✅ |
+| ③ 品牌资产 | 由工作区根目录的 `metaContext.svg`（品牌素材，尚未纳入版本控制）生成 `logo.svg`（mark+wordmark）、`logo-monogram.svg`、`public/favicon.png`、`public/logo192.png`、`public/favicons/*`（24 个） | ✅ |
 | ④ 文案 | 20 个语言文件 × 4 条：`OpenMetadata` → `MetaContext`（共 80 处） | ✅ |
 
 **组 8（UI 服务文档 md）经核实无需改动**：`ServiceDocPanel.tsx:693` 在渲染时执行
