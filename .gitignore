@@ -209,3 +209,4 @@ ingestion/.claude/agents
 test-results/
 
 docs/superpowers/*
+docs/architecture/technical.architecture.json
