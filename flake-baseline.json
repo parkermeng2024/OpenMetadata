@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-06T10:09:33Z",
+  "generatedAt": "2026-10-07T10:02:22Z",
   "window": 10,
   "threshold": 2,
   "runs": [
@@ -33,6 +33,11 @@
       "runId": "37441592567",
       "sourceSha": "288e0171f772d4652f059dc816574d9121133d93",
       "recordedAt": "2026-10-06T10:09:33Z"
+    },
+    {
+      "runId": "37598131600",
+      "sourceSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "recordedAt": "2026-10-07T10:02:22Z"
     }
   ],
   "entries": {
@@ -48,7 +53,8 @@
     },
     "Ingestion :: Features/AutoPilot.spec.ts :: Airflow \u203a Create Service and check the AutoPilot status": {
       "observations": [
-        "37441592567"
+        "37441592567",
+        "37598131600"
       ],
       "project": "Ingestion",
       "file": "Features/AutoPilot.spec.ts",
@@ -58,7 +64,8 @@
     },
     "Ingestion :: Features/AutoPilot.spec.ts :: Kafka \u203a Create Service and check the AutoPilot status": {
       "observations": [
-        "37441592567"
+        "37441592567",
+        "37598131600"
       ],
       "project": "Ingestion",
       "file": "Features/AutoPilot.spec.ts",
@@ -68,13 +75,24 @@
     },
     "Ingestion :: Features/AutoPilot.spec.ts :: Metabase \u203a Create Service and check the AutoPilot status": {
       "observations": [
-        "37441592567"
+        "37441592567",
+        "37598131600"
       ],
       "project": "Ingestion",
       "file": "Features/AutoPilot.spec.ts",
       "title": "Metabase \u203a Create Service and check the AutoPilot status",
       "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
       "hardFailure": true
+    },
+    "Ingestion :: Pages/TestSuiteDetailsPage.spec.ts :: Add test case modal on Test Suite details page - filters and select": {
+      "observations": [
+        "37598131600"
+      ],
+      "project": "Ingestion",
+      "file": "Pages/TestSuiteDetailsPage.spec.ts",
+      "title": "Add test case modal on Test Suite details page - filters and select",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "hardFailure": false
     },
     "chromium :: Features/AIMode/ProfileNotificationTab.spec.ts :: Destination should work properly": {
       "observations": [
@@ -116,6 +134,26 @@
       "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
       "hardFailure": false
     },
+    "chromium :: Features/Glossary/GlossaryAdvancedOperations.spec.ts :: Glossary Advanced Operations \u203a should remove owner from term": {
+      "observations": [
+        "37598131600"
+      ],
+      "project": "chromium",
+      "file": "Features/Glossary/GlossaryAdvancedOperations.spec.ts",
+      "title": "Glossary Advanced Operations \u203a should remove owner from term",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "hardFailure": false
+    },
+    "chromium :: Features/NestedColumnsExpandCollapse.spec.ts :: Search Index - Nested columns with duplicate names \u203a should not duplicate rows when expanding and collapsing nested columns with same names": {
+      "observations": [
+        "37598131600"
+      ],
+      "project": "chromium",
+      "file": "Features/NestedColumnsExpandCollapse.spec.ts",
+      "title": "Search Index - Nested columns with duplicate names \u203a should not duplicate rows when expanding and collapsing nested columns with same names",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "hardFailure": false
+    },
     "chromium :: Pages/DomainAdvanced.spec.ts :: Domain Description Editing \u203a Admin can edit domain description": {
       "observations": [
         "36808101811"
@@ -134,6 +172,16 @@
       "file": "Pages/Domains.spec.ts",
       "title": "Domains \u203a Create DataProducts and add remove assets",
       "lastSeenSha": "170677437861064916f8ac34ceea410bb4ca8273",
+      "hardFailure": false
+    },
+    "chromium :: Pages/Entity.spec.ts :: Table \u203a DisplayName Add, Update and Remove for child entities": {
+      "observations": [
+        "37598131600"
+      ],
+      "project": "chromium",
+      "file": "Pages/Entity.spec.ts",
+      "title": "Table \u203a DisplayName Add, Update and Remove for child entities",
+      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
       "hardFailure": false
     },
     "chromium :: Pages/Lineage/DataAssetLineage.spec.ts :: Column Level Lineage \u203a Column lineage for apiEndpoint -> mlModel": {
@@ -167,6 +215,14 @@
       "hardFailure": false
     }
   },
-  "stableIds": [],
-  "hardFailureStableIds": []
+  "stableIds": [
+    "Ingestion :: Features/AutoPilot.spec.ts :: Airflow \u203a Create Service and check the AutoPilot status",
+    "Ingestion :: Features/AutoPilot.spec.ts :: Kafka \u203a Create Service and check the AutoPilot status",
+    "Ingestion :: Features/AutoPilot.spec.ts :: Metabase \u203a Create Service and check the AutoPilot status"
+  ],
+  "hardFailureStableIds": [
+    "Ingestion :: Features/AutoPilot.spec.ts :: Airflow \u203a Create Service and check the AutoPilot status",
+    "Ingestion :: Features/AutoPilot.spec.ts :: Kafka \u203a Create Service and check the AutoPilot status",
+    "Ingestion :: Features/AutoPilot.spec.ts :: Metabase \u203a Create Service and check the AutoPilot status"
+  ]
 }
