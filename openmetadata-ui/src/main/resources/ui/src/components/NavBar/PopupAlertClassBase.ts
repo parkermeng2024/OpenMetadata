@@ -11,16 +11,16 @@
  *  limitations under the License.
  */
 
-import GithubStarCard from '../MyData/GithubStarCard/GithubStarCard.component';
+import { FC } from 'react';
+
+export interface PopupAlertCard {
+  key: string;
+  component: FC;
+}
 
 class PopupAlertsCardsClassBase {
-  public alertsCards() {
-    return [
-      {
-        key: 'githubPopupAlertCard',
-        component: GithubStarCard,
-      },
-    ];
+  public alertsCards(): PopupAlertCard[] {
+    return [];
   }
 }
 

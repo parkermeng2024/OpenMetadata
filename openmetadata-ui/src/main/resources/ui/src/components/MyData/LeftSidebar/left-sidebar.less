@@ -23,6 +23,19 @@
   margin: var(--om-space-20) 0;
 }
 
+// The wordmark is ~8.55:1. Capping it at 20px renders ~171px wide, which fits the
+// rail's 172px content width (228px rail − 2 × 28px padding). Left unconstrained it
+// fills the 40px container height, renders ~342px and spills over the nav bar.
+.sidebar-open .logo-container {
+  display: flex;
+  align-items: center;
+
+  img {
+    height: 20px;
+    width: auto;
+  }
+}
+
 .app-container {
   & > .ant-layout-sider {
     height: 100vh;
