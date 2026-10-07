@@ -100,6 +100,8 @@ const NavBar = () => {
     handleDeleteEntityWebsocketResponse
   );
   handleDeleteEntityResponseRef.current = handleDeleteEntityWebsocketResponse;
+  // The OS paints the notification surface, not the app theme, so this icon
+  // keeps the default light-surface ink.
   const Logo = brandClassBase.getMonogram().src;
   const [showVersionMissMatchAlert, setShowVersionMissMatchAlert] =
     useState(false);

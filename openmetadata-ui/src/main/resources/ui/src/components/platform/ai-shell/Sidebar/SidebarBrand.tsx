@@ -16,6 +16,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '../../../../constants/constants';
+import { useTheme } from '../../../../context/UntitledUIThemeProvider/theme-provider';
 import brandClassBase from '../../../../utils/BrandData/BrandClassBase';
 
 export interface SidebarBrandProps {
@@ -39,8 +40,11 @@ export interface SidebarBrandProps {
 const SidebarBrand: React.FC<SidebarBrandProps> = ({ variant = 'panel' }) => {
   const navigate = useNavigate();
   const { t } = useTranslation();
-  const Logo = brandClassBase.getSidebarLogo().svg;
-  const Monogram = brandClassBase.getSidebarMonogram().svg;
+  const { theme } = useTheme();
+  // The sidebar surface is theme-driven, so its brand ink has to follow suit —
+  // the default navy is invisible on the dark sidebar background.
+  const Logo = brandClassBase.getSidebarLogo(theme).svg;
+  const Monogram = brandClassBase.getSidebarMonogram(theme).svg;
 
   return (
     <button
