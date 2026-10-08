@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-07T10:02:22Z",
+  "generatedAt": "2026-10-08T10:13:28Z",
   "window": 10,
   "threshold": 2,
   "runs": [
@@ -38,9 +38,24 @@
       "runId": "37598131600",
       "sourceSha": "288e0171f772d4652f059dc816574d9121133d93",
       "recordedAt": "2026-10-07T10:02:22Z"
+    },
+    {
+      "runId": "37755915757",
+      "sourceSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
+      "recordedAt": "2026-10-08T10:13:28Z"
     }
   ],
   "entries": {
+    "Basic :: Pages/Bots.spec.ts :: Bots Page should work properly \u203a Bots Page should work properly": {
+      "observations": [
+        "37755915757"
+      ],
+      "project": "Basic",
+      "file": "Pages/Bots.spec.ts",
+      "title": "Bots Page should work properly \u203a Bots Page should work properly",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
+      "hardFailure": true
+    },
     "Basic :: Pages/Lineage/LineageInteraction.spec.ts :: Lineage Interactions \u203a Edge Interaction \u203a Verify edge delete button in drawer": {
       "observations": [
         "36957299462"
@@ -54,34 +69,37 @@
     "Ingestion :: Features/AutoPilot.spec.ts :: Airflow \u203a Create Service and check the AutoPilot status": {
       "observations": [
         "37441592567",
-        "37598131600"
+        "37598131600",
+        "37755915757"
       ],
       "project": "Ingestion",
       "file": "Features/AutoPilot.spec.ts",
       "title": "Airflow \u203a Create Service and check the AutoPilot status",
-      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
       "hardFailure": true
     },
     "Ingestion :: Features/AutoPilot.spec.ts :: Kafka \u203a Create Service and check the AutoPilot status": {
       "observations": [
         "37441592567",
-        "37598131600"
+        "37598131600",
+        "37755915757"
       ],
       "project": "Ingestion",
       "file": "Features/AutoPilot.spec.ts",
       "title": "Kafka \u203a Create Service and check the AutoPilot status",
-      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
       "hardFailure": true
     },
     "Ingestion :: Features/AutoPilot.spec.ts :: Metabase \u203a Create Service and check the AutoPilot status": {
       "observations": [
         "37441592567",
-        "37598131600"
+        "37598131600",
+        "37755915757"
       ],
       "project": "Ingestion",
       "file": "Features/AutoPilot.spec.ts",
       "title": "Metabase \u203a Create Service and check the AutoPilot status",
-      "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
       "hardFailure": true
     },
     "Ingestion :: Pages/TestSuiteDetailsPage.spec.ts :: Add test case modal on Test Suite details page - filters and select": {
@@ -154,6 +172,16 @@
       "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
       "hardFailure": false
     },
+    "chromium :: Pages/DataContractsSemanticRules.spec.ts :: Data Contracts Semantics Rule Description \u203a Validate Description Rule Is_Not_Set": {
+      "observations": [
+        "37755915757"
+      ],
+      "project": "chromium",
+      "file": "Pages/DataContractsSemanticRules.spec.ts",
+      "title": "Data Contracts Semantics Rule Description \u203a Validate Description Rule Is_Not_Set",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
+      "hardFailure": false
+    },
     "chromium :: Pages/DomainAdvanced.spec.ts :: Domain Description Editing \u203a Admin can edit domain description": {
       "observations": [
         "36808101811"
@@ -184,6 +212,16 @@
       "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
       "hardFailure": false
     },
+    "chromium :: Pages/LearningResources.spec.ts :: Learning Resources Admin Page \u203a should preview a learning resource by clicking on row": {
+      "observations": [
+        "37755915757"
+      ],
+      "project": "chromium",
+      "file": "Pages/LearningResources.spec.ts",
+      "title": "Learning Resources Admin Page \u203a should preview a learning resource by clicking on row",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
+      "hardFailure": true
+    },
     "chromium :: Pages/Lineage/DataAssetLineage.spec.ts :: Column Level Lineage \u203a Column lineage for apiEndpoint -> mlModel": {
       "observations": [
         "37174398749"
@@ -193,6 +231,16 @@
       "title": "Column Level Lineage \u203a Column lineage for apiEndpoint -> mlModel",
       "lastSeenSha": "507f5d783c6ca2ee22c76c0eb92b44ff6055cc79",
       "hardFailure": false
+    },
+    "chromium :: Pages/OmdURLConfiguration.spec.ts :: OM URL configuration \u203a update om url configuration should work": {
+      "observations": [
+        "37755915757"
+      ],
+      "project": "chromium",
+      "file": "Pages/OmdURLConfiguration.spec.ts",
+      "title": "OM URL configuration \u203a update om url configuration should work",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
+      "hardFailure": true
     },
     "chromium :: Pages/ServiceEntity.spec.ts :: Delete Api Service": {
       "observations": [
@@ -212,6 +260,16 @@
       "file": "Pages/Tag.spec.ts",
       "title": "Tag Page with Data Steward Roles \u203a Edit Tag Description for Data Steward",
       "lastSeenSha": "288e0171f772d4652f059dc816574d9121133d93",
+      "hardFailure": false
+    },
+    "chromium :: Pages/Tags.spec.ts :: Verify Owner Add Delete": {
+      "observations": [
+        "37755915757"
+      ],
+      "project": "chromium",
+      "file": "Pages/Tags.spec.ts",
+      "title": "Verify Owner Add Delete",
+      "lastSeenSha": "57e2f6eb45afae7ff0bf0037785e2ceca720cf02",
       "hardFailure": false
     }
   },
